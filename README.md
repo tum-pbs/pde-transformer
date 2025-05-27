@@ -6,8 +6,8 @@ This is the code for the ICML'25 paper _PDE-Transformer_ by B. Holzschuh, Q. Liu
 
 Will follow soon!
 
-# Closing Remkars
+# Closing Remarks
 
-[TUM](https://www.tum.de/) - [Please also check out the other work of our lab :)](https://ge.in.tum.de/publications/)
+[Please also check out the other work of our lab :)](https://ge.in.tum.de/publications/)
 
 
