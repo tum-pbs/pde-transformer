@@ -1,0 +1,6 @@
+numpy
+h5py
+matplotlib
+jax[cuda12]
+exponax==0.1.0
+vape4d

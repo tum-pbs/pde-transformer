@@ -1,0 +1,100 @@
+project: ape-transformers-v1
+name: udit-s-flow
+
+batch_size: 16
+max_epochs: 1000
+
+trainer:
+    base_learning_rate: 1.0e-4
+    batch_size: ${batch_size}
+    scale_lr: False
+    params:
+        _file: config/default_trainer_args.yaml
+        max_epochs: ${max_epochs}
+        accumulate_grad_batches: 4
+        precision: bf16-mixed
+        gradient_clip_val: 1.0
+
+num_train_timesteps: 20
+
+pipelines:
+    default:
+      target: src.sampler.pipeline.VideoPipeline
+      scheduler:
+        target: src.sampler.scheduler.OdeEulerScheduler
+        params:
+          num_train_timesteps: ${num_train_timesteps}
+          sigma_min: ${sigma_min}
+
+patch_size: 4
+in_channels: 4
+out_channels: 2
+sample_size: 128
+
+sigma_min: 1e-4
+
+model:
+    target: src.core.training.SingleStepDiffusion
+    params:
+        model:
+          target: src.core.mixed_channels.UDiT
+          params:
+            sample_size: ${sample_size}
+            in_channels: ${in_channels}
+            out_channels: ${out_channels}
+            type: U-DiT-S
+            patch_size: ${patch_size}
+        objective:
+          target: src.objectives.COTFlowMatchingCoupled
+          params:
+            sigma_min: ${sigma_min}
+            max_channels: 2
+            dropout_state: 0.0
+        downsample_factor: 1
+        monitor: val/loss
+        ckpt_path: ${runtime.checkpoint_dir}
+        image_key: 0
+
+unrolling_steps: 1
+test_unrolling_steps: 29
+
+data:
+  _file: config/icml/transformer_comparison/data/multi_task_norm.yaml
+
+frequency_log_images: 40
+frequency_log_metrics: 40
+frequency_store_pipelines: 40
+
+callbacks:
+  _file: config/default_callbacks.yaml
+  ema:
+    target: src.callback.EMA
+    params:
+      decay: 0.999
+#  diffusers:
+#    target: src.callback.Diffusers
+#    params:
+#      pipeline: ${pipelines.default}
+#      frequency: ${frequency_store_pipelines}
+#      repo_id: ${project}/${name}
+#      save_dir: ${runtime.logdir}/pipelines
+#  images:
+#    target: src.callback.MultiTaskVideoLogger
+#    params:
+#      frequency: ${frequency_log_images}
+#      pipelines: ${pipelines}
+#      num_frames: 29
+#      prepare_plots:
+#        target: src.data.pbdl_module.prepare_plots
+  simulation:
+    target: src.callback.Simulation2DMetricLoggerCustom
+    params:
+      frequency: ${frequency_log_metrics}
+      batch_size: ${batch_size}
+      num_frames: 29
+      num_inference_steps: 40
+      test_only: True
+      metric_config:
+        _file: config/default_simulation_metrics.yaml
+
+

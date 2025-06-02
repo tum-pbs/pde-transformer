@@ -1,0 +1,13 @@
+fid:
+  target: torchmetrics.image.fid.FrechetInceptionDistance
+  params:
+    feature: 2048
+    reset_real_features: False
+    normalize: False
+    sync_on_compute: False
+is:
+  target: torchmetrics.image.InceptionScore
+  params:
+    feature: logits_unbiased
+    normalize: False
+    sync_on_compute: False

@@ -1,0 +1,14 @@
+mse:
+  target: src.metric.SimulationMSE
+  params:
+    frequency: 1
+    num_tasks: 30
+    max_length: 100
+    dataset_names: ${data.params.dataset_names}
+ae:
+  target: src.metric.SimulationAE
+  params:
+    frequency: 1
+    num_tasks: 30
+    max_length: 100
+    dataset_names: ${data.params.dataset_names}

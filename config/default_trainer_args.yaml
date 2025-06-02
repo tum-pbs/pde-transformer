@@ -1,0 +1,3 @@
+devices: ${machine.devices}
+accelerator: ${machine.accelerator}
+strategy: ${machine.strategy}

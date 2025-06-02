@@ -1,0 +1,94 @@
+project: ape-transformers-mse
+name: udit-s-mse
+
+batch_size: 16
+max_epochs: 100
+
+trainer:
+    base_learning_rate: 4.0e-5
+    batch_size: ${batch_size}
+    scale_lr: False
+    params:
+      _file: config/default_trainer_args.yaml
+      max_epochs: ${max_epochs}
+      accumulate_grad_batches: 4
+      precision: bf16-mixed
+
+num_train_timesteps: 20
+
+pipelines:
+    default:
+      target: src.sampler.pipeline.VideoPipeline
+      scheduler:
+        target: src.sampler.scheduler.OdeEulerScheduler
+        params:
+          num_train_timesteps: ${num_train_timesteps}
+          sigma_min: ${sigma_min}
+
+patch_size: 4
+in_channels: 2
+out_channels: 2
+sample_size: 128
+
+sigma_min: 1e-4
+
+model:
+    target: src.core.training.SingleStepSupervised
+    params:
+        model:
+          target: src.core.mixed_channels.UDiT
+          params:
+            sample_size: ${sample_size}
+            in_channels: ${in_channels}
+            out_channels: ${out_channels}
+            type: U-DiT-S
+            patch_size: ${patch_size}
+        monitor: val/loss
+        ckpt_path: ${runtime.checkpoint_dir}
+        image_key: 0
+
+unrolling_steps: 1
+test_unrolling_steps: 29
+
+data:
+  _file: config/icml/transformer_comparison/data/multi_task_norm.yaml
+
+frequency_log_images: 40
+frequency_log_metrics: 40
+frequency_store_pipelines: 40
+
+callbacks:
+  _file: config/default_callbacks.yaml
+  ema:
+    target: src.callback.EMA
+    params:
+      decay: 0.999
+  images:
+    target: src.callback.MultiTaskVideoLoggerCustom
+    params:
+      frequency: ${frequency_log_images}
+      num_frames: 29
+      num_inference_steps: 40
+      test_only: True
+      disabled: True
+      prepare_plots:
+        target: src.data.pbdl_module.prepare_plots
+  simulation:
+    target: src.callback.Simulation2DMetricLoggerCustom
+    params:
+      frequency: ${frequency_log_metrics}
+      batch_size: ${batch_size}
+      num_frames: 29
+      num_inference_steps: 40
+      test_only: True
+      metric_config:
+        _file: config/default_simulation_metrics.yaml
+  emagrad:
+    target: src.callback.EmaGradClip
+    params:
+      ema_coef1: 0.9
+      ema_coef2: 0.99
+      max_norm_ratio: 2.0
+      clip_norm_ratio: 1.1
+
+

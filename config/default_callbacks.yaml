@@ -1,0 +1,27 @@
+setup_callback:
+    target: "src.callback.setup_callback.SetupCallback"
+    params:
+        resume: ${runtime.resume}
+        logdir: ${runtime.logdir}
+        ckptdir: ${runtime.checkpoint_dir}
+        cfgdir: ${runtime.config_dir}
+
+model_summary:
+    target: "lightning.pytorch.callbacks.ModelSummary"
+    params:
+        max_depth: 10
+
+learning_rate_logger:
+    target: "lightning.pytorch.callbacks.LearningRateMonitor"
+    params:
+        logging_interval: "step"
+
+model_checkpoint:
+    target: "lightning.pytorch.callbacks.ModelCheckpoint"
+    params:
+        dirpath: ${runtime.checkpoint_dir}
+        filename: "{epoch:06}"
+        verbose: True
+        save_last: True
+        monitor: ${model.params.monitor}
+        save_top_k: 3
