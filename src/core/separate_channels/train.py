@@ -4,15 +4,11 @@ from typing import Tuple, Dict, Any, Optional
 import torch
 import torch.nn as nn
 from lightning.pytorch.utilities.types import STEP_OUTPUT
-from sympy.stats.rv import probability
-from tensorboard.summary.v1 import image
 from timm.scheduler import TanhLRScheduler
-from torch.nn.functional import unfold
 from tqdm import tqdm
 
-from core.masked_modeling_v1.tasks import AbstractTask
-from core.masked_modeling_v2.tasks import TaskMasking
-from sampler.scheduler import OdeEulerScheduler
+from src.core.separate_channels.tasks import TaskMasking, AbstractTask
+from src.sampler.scheduler import OdeEulerScheduler
 from src.utils import instantiate_from_config
 
 import numpy as np

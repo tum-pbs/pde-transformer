@@ -2,6 +2,7 @@ from typing import List, Optional, Union, Iterable
 
 from lightning import Callback, Trainer, LightningModule
 from lightning.fabric.utilities import rank_zero_only
+from lightning_utilities.core.rank_zero import rank_zero_warn
 from omegaconf import DictConfig, OmegaConf
 
 import glob
@@ -16,7 +17,7 @@ import subprocess
 
 import seaborn as sns
 from matplotlib import pyplot as plt
-from visualization import render_trajectory, render_vape_3d
+from src.visualization import render_trajectory, render_vape_3d
 
 from src.data.simulations_apebench.render import zigzag_alpha
 from src.data.multi_module import get_subdatasets_from_dataloader
@@ -24,15 +25,16 @@ from src.utils import instantiate_from_config, get_pipeline
 
 plt.ioff()
 
-
-
-
-
 def gen_video_frame_2d(img, reference, normalization, std):
 
     AE_NORM_2D = 0.3
 
     norm_min, norm_max = normalization
+
+    if norm_min is None or norm_max is None:
+        norm_min = img.min()
+        norm_max = img.max()
+
     img = (img - norm_min) / (norm_max - norm_min)
     reference = (reference - norm_min) / (norm_max - norm_min)
     diff = img - reference
@@ -170,7 +172,7 @@ class VideoLogger(Callback):
             # self.log_local(logdir, pipeline, list(images), current_epoch)
 
             trainer.logger.experiment.log({
-                pipeline: [wandb.Video(logdir + f'/videos/pipeline-{pipeline}_e{current_epoch}_i{i}.mp4')
+                pipeline: [wandb.Video(logdir + f'/videos/pipeline-{pipeline}_e{current_epoch}_i{i}.mp4', format='mp4',)
                            for i in range(videos.shape[0])]
             })
 
@@ -305,7 +307,7 @@ class MultiTaskVideoLogger(VideoLogger):
                     save_video(video, full_simulation, names_list[c], savedir, savename, video_frame_fn)
                     savename = f"{savedir}/{savename}.mp4"
                     trainer.logger.experiment.log({
-                        f'{names_list[c]}_{pipeline}': wandb.Video(savename)
+                        f'{names_list[c]}_{pipeline}': wandb.Video(savename, format='mp4',)
                     })
 
         if is_train:
@@ -440,19 +442,20 @@ class MultiTaskVideoLoggerCustom(Callback):
                     trainer.logger.experiment.log({
                         f'{simulation_name}_pred': wandb.Image(savename_pred),
                         f'{simulation_name}_ref': wandb.Image(savename_ref),
-                        f'{simulation_name}_video': wandb.Video(savename_video)
+                        f'{simulation_name}_video': wandb.Video(savename_video, format="mp4")
                     })
                 else:
                     trainer.logger.experiment.log({
-                        f'{simulation_name}': wandb.Video(savename_video)
+                        f'{simulation_name}': wandb.Video(savename_video, format='mp4'),
                     })
 
             if is_train:
                 pl_module.train()
 
         except Exception as e:
-            print(e)
-            pass
+
+            rank_zero_warn(f"Error while logging video: {e}")
+            raise e
 
     def on_test_start(self, trainer: Trainer, pl_module: LightningModule) -> None:
         self.setup_test_dataloader(trainer)

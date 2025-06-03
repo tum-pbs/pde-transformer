@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List
 
 from torch.nn.functional import mse_loss
 
@@ -42,15 +42,6 @@ class SingleStepSupervised(lightning.LightningModule):
                 conditioning: torch.Tensor = None) -> torch.Tensor:
 
         return self.model(x, t)
-
-    # def on_save_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
-    #     """
-    #     Tentative fix for FSDP checkpointing issue
-    #     """
-    #     if not checkpoint.get("state_dict", None):
-    #         state_dict = self.trainer.model.state_dict()
-    #         checkpoint["state_dict"] = state_dict
-    #     return super().on_save_checkpoint(checkpoint)
 
     def get_pipeline_args(self):
         return {
@@ -271,7 +262,7 @@ class SingleStepSupervised(lightning.LightningModule):
 
             for i in tqdm(range(num_frames-1)):
 
-                x0 = self.predict_step(previous_frame, generator=generator, #class_labels=labels,
+                x0 = self.predict_step(previous_frame, generator=generator, class_labels=labels,
                                        num_inference_steps=num_inference_steps)
                 x0 = self.postprocess_output(x0, batch['physical_metadata'])
 

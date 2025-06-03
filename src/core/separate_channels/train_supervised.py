@@ -6,8 +6,8 @@ import torch.nn as nn
 from lightning.pytorch.utilities.types import STEP_OUTPUT
 from tqdm import tqdm
 
-from core.separate_channels.tasks import TaskMasking, ForwardPrediction
-from core.separate_channels.utils import from_patch_representation, to_patch_representation
+from src.core.separate_channels.tasks import TaskMasking, ForwardPrediction
+from src.core.separate_channels.utils import from_patch_representation, to_patch_representation
 
 from src.utils import instantiate_from_config
 

@@ -5,6 +5,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 from diffusers import ModelMixin, ConfigMixin
 from diffusers.configuration_utils import register_to_config
+from diffusers.models.embeddings import CombinedTimestepLabelEmbeddings
 from diffusers.utils import BaseOutput
 from einops import rearrange
 from torch.nn import PixelShuffle
@@ -14,15 +15,54 @@ import numpy as np
 from timm.models.layers import DropPath
 import torch
 
-from core.mixed_channels.udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb, Mlp
-from core.separate_channels.pde_transformer import AdaLayerNormZero
-
+from src.core.mixed_channels.udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb
 
 ###############################
 # We need to create subclass of Swinv2PreTrainedModel because it sets use_mask_token=True
 # This will create a parameter swinv2.embeddings.mask_token that will receive no gradient if bool_masked_pos is None
 # This then triggers https://github.com/Lightning-AI/pytorch-lightning/issues/17212
 ###############################
+
+class Mlp(nn.Module):
+    """
+    Multi-Layer Perceptron (MLP) block
+    """
+
+    def __init__(
+        self,
+        in_features,
+        hidden_features=None,
+        out_features=None,
+        act_layer=nn.GELU,
+        drop=0.0,
+    ):
+        """
+        Args:
+            in_features: input features dimension.
+            hidden_features: hidden features dimension.
+            out_features: output features dimension.
+            act_layer: activation function.
+            drop: dropout rate.
+        """
+
+        super().__init__()
+        out_features = out_features or in_features
+        hidden_features = hidden_features or in_features
+        self.fc1 = nn.Linear(in_features, hidden_features)
+        self.act = act_layer()
+        self.fc2 = nn.Linear(hidden_features, out_features)
+        self.drop = nn.Dropout(drop)
+
+    def forward(self, x):
+        x_size = x.size()
+        x = x.view(-1, x_size[-1])
+        x = self.fc1(x)
+        x = self.act(x)
+        x = self.drop(x)
+        x = self.fc2(x)
+        x = self.drop(x)
+        x = x.view(x_size)
+        return x
 
 # Copied from transformers.models.swin.modeling_swin.window_partition
 def window_partition(input_feature, window_size):
@@ -265,12 +305,53 @@ class TokenInitializer(nn.Module):
 
         return x
 
+class AdaLayerNormZero(nn.Module):
+    r"""
+    Norm layer adaptive layer norm zero (adaLN-Zero).
+
+    Parameters:
+        embedding_dim (`int`): The size of each embedding vector.
+        num_embeddings (`int`): The size of the embedding's dictionary.
+    """
+
+    def __init__(self, embedding_dim: int, num_embeddings: Optional[int] = None, norm_type="layer_norm", bias=True):
+        super().__init__()
+        if num_embeddings is not None:
+            self.emb_impl = CombinedTimestepLabelEmbeddings(num_embeddings, embedding_dim)
+        else:
+            self.emb_impl = None
+
+        self.silu = nn.SiLU()
+        self.linear = nn.Linear(embedding_dim, 6 * embedding_dim, bias=bias)
+        if norm_type == "layer_norm":
+            self.norm = nn.LayerNorm(embedding_dim, elementwise_affine=False, eps=1e-6)
+        elif norm_type == "fp32_layer_norm":
+            self.norm = FP32LayerNorm(embedding_dim, elementwise_affine=False, bias=False)
+        else:
+            raise ValueError(
+                f"Unsupported `norm_type` ({norm_type}) provided. Supported ones are: 'layer_norm', 'fp32_layer_norm'."
+            )
+
+    def forward(
+        self,
+        timestep: Optional[torch.Tensor] = None,
+        class_labels: Optional[torch.LongTensor] = None,
+        hidden_dtype: Optional[torch.dtype] = None,
+        emb: Optional[torch.Tensor] = None,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        if self.emb_impl is not None:
+            emb = self.emb_impl(timestep, class_labels, hidden_dtype=hidden_dtype)
+        emb = self.linear(self.silu(emb))
+        msa_shift, msa_scale, msa_gate, mlp_shift, mlp_scale, mlp_gate = emb.chunk(6, dim=1)
+        return msa_shift, msa_scale, msa_gate, mlp_shift, mlp_scale, mlp_gate
+
 class PDEStage(nn.Module):
     def __init__(
         self, dim: int, depth: int,
             num_heads: int, window_size: int,
             periodic=False, carrier_token_active: bool = True,
             mlp_ratio: float = 4.0,
+            drop_path: float = 0.0,
     ):
         super().__init__()
 
@@ -284,6 +365,7 @@ class PDEStage(nn.Module):
                 window_size=window_size,
                 mlp_ratio=mlp_ratio,
                 carrier_token_active=carrier_token_active,
+                drop_path=drop_path,
             )
             blocks.append(block)
 
@@ -1072,7 +1154,7 @@ class PDEImpl(nn.Module):
         assert self.max_hidden_size >= hidden_size, f"max_hidden_size {max_hidden_size} must be greater than or equal to hidden_size {hidden_size}."
 
         dit_stage_args = {
-            "drop_path": None,
+            "drop_path": 0.0,
             "periodic": periodic,
             'carrier_token_active': carrier_token_active,
             'mlp_ratio': mlp_ratio,
@@ -1277,7 +1359,7 @@ class PDETransformer(ModelMixin, ConfigMixin):
             patch_size: Optional[int] = None,
             **kwargs
     ):
-        super(PDE, self).__init__()
+        super(PDETransformer, self).__init__()
         args = {'in_channels': in_channels, 'out_channels': out_channels, 'patch_size': patch_size,
                 'periodic': periodic, 'carrier_token_active': carrier_token_active, 'window_size': window_size}
 

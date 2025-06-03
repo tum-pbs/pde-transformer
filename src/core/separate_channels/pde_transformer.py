@@ -18,9 +18,9 @@ from timm.models.layers import trunc_normal_, DropPath
 import torch
 from transformers.pytorch_utils import meshgrid, find_pruneable_heads_and_indices, prune_linear_layer
 
-from core.models.udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb
+from src.core.mixed_channels.udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb
 
-from core.mixed_channels.udit import Mlp
+from src.core.mixed_channels.pde_transformer import Mlp
 
 
 # Copied from transformers.models.swin.modeling_swin.window_partition
@@ -1609,7 +1609,7 @@ class PDETransformer(ModelMixin, ConfigMixin):
             carrier_token_active: bool = True,
             patch_size: Optional[int] = None,
     ):
-        super(PDE, self).__init__()
+        super(PDETransformer, self).__init__()
         args = { 'num_timesteps': num_timesteps, 'patch_size': patch_size, 'learn_sigma': False,
                  'periodic': periodic, 'use_carrier_tokens': carrier_token_active}
 

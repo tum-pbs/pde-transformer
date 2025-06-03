@@ -1,7 +1,7 @@
 project: ape-transformers-mse
 name: pde-mc-b-mse
 
-batch_size: 32
+batch_size: 8
 max_epochs: 100
 
 trainer:
@@ -11,7 +11,7 @@ trainer:
     params:
         _file: config/default_trainer_args.yaml
         max_epochs: ${max_epochs}
-        accumulate_grad_batches: 2
+        accumulate_grad_batches: 8
         precision: bf16-mixed
 
 num_train_timesteps: 20
@@ -49,7 +49,7 @@ unrolling_steps: 1
 test_unrolling_steps: 29
 
 data:
-  _file: config/icml/transformer_comparison/data/multi_task_norm.yaml
+  _file: config/ape_2d/data/multi_task_norm.yaml
 
 frequency_log_images: 100
 frequency_log_metrics: 100
@@ -68,7 +68,6 @@ callbacks:
       num_frames: 29
       num_inference_steps: 40
       test_only: True
-      disabled: True
       prepare_plots:
         target: src.data.pbdl_module.prepare_plots
   simulation:

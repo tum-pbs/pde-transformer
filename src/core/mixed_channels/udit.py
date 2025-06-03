@@ -22,21 +22,13 @@ from typing import Optional, Dict, Any
 
 import torch
 import torch.nn as nn
-import numpy as np
 import math
 import torch.nn.functional as F
-# from timm.models.vision_transformer import PatchEmbed
-# from timm.models.layers import LayerNorm2d
-
-from pdb import set_trace as stx
-import numbers
 
 from diffusers import ConfigMixin, ModelMixin
 from diffusers.configuration_utils import register_to_config
 from diffusers.utils import BaseOutput
-# from torchprofile import profile_macs
 from einops import rearrange
-import einops
 import warnings
 
 class LayerNorm2d(nn.LayerNorm):

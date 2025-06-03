@@ -4,7 +4,7 @@ from typing import List
 from diffusers.utils.torch_utils import randn_tensor
 from tqdm import tqdm
 
-from sampler.scheduler import OdeEulerScheduler
+from src.sampler.scheduler import OdeEulerScheduler
 from src.objectives import TrainingObjective
 
 from src.utils import instantiate_from_config

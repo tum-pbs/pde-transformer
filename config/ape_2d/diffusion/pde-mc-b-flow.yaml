@@ -61,7 +61,7 @@ unrolling_steps: 1
 test_unrolling_steps: 29
 
 data:
-  _file: config/icml/transformer_comparison/data/multi_task_norm.yaml
+  _file: config/ape_2d/data/multi_task_norm.yaml
 
 frequency_log_images: 100
 frequency_log_metrics: 100

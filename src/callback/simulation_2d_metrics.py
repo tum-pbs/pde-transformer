@@ -1,22 +1,16 @@
 from typing import Optional, Any, Dict
 
-import torchmetrics
 from lightning import Callback, Trainer, LightningModule
 from lightning.fabric.utilities import rank_zero_only
 import torch
-from math import ceil
 from omegaconf import DictConfig, OmegaConf
-from tqdm import tqdm
 
-from data.multi_module import get_subdatasets_from_dataloader
 from src.callback.ema import EMAOptimizer
 from src.metric.metric import get_metrics
-from src.utils import instantiate_from_config, get_pipeline
+from src.utils import get_pipeline
 
 import logging
 log = logging.getLogger(__name__)
-
-from lightning.fabric.utilities.rank_zero import rank_prefixed_message, _get_rank, rank_zero_info
 
 import torch.nn as nn
 
