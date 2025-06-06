@@ -1,0 +1,25 @@
+{
+  "name": "pde-transformer",
+  "version": "1.0.0",
+  "description": "This is the code for the ICML'25 paper _PDE-Transformer_ by B. Holzschuh, Q. Liu, G. Kohl, and N. Thuerey.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "rollup -c --bundleConfigAsCjs",
+    "watch": "rollup -c --bundleConfigAsCjs --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "rollup": "^4.12.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-terser": "^0.4.4"
+  }
+}

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="PDE-Transformer is a efficient and flexible network architecture for learning PDEs from data.">
+  <meta name="keywords" content="PDEs, Transformers, Neural Surrogates, Foundation Models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDE-Transformer: Efficient and Flexible Network Architecture for Learning PDEs from Data</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://ge.in.tum.de">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://ge.in.tum.de/publications">
+            Publications
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations</h1>
+          <h2 class="subtitle is-4 opacity-1" style="margin-top: 1rem;opacity:0.7">ICML 2025</h2>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="">Benjamin Holzschuh</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Qiang Liu</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Georg Kohl</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Nils Thuerey</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Physics-based Simulation Group, Technical University of Munich</span>
+          </div>
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2505.24717"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2505.24717"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/tum-pbs/pde-transformer"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Docs Link. -->
+              <span class="link-block">
+                <a href="https://tum-pbs.github.io/pde-transformer"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-globe"></i>
+                  </span>
+                  <span>Docs</span>
+                </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/thuerey-group/pde-transformer"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span>Hugging Face</span>
+                  </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <video id="ape2d-video" autoplay muted loop playsinline height="100%">
+            <source src="./static/videos/ape2d_video_examples_0.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!-- <div class="column is-full-width">
+          <img src="./static/images/pde_transformer_examples.jpg" alt="PDE-Transformer examples" width="100%">
+        </div> -->
+      </div>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">PDE-Transformer</span> is a transformer model tailored to scientific data, jointly trained on a large dataset comprising 16 different PDE dynamics. 
+        Simulation parameters (viscosity, domain extent, etc.) are unknown to the model and need to be inferred from the observed data. 
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We introduce PDE-Transformer, an improved transformer-based architecture for surrogate modeling 
+            of physics simulations on regular grids. We combine recent architectural improvements of diffusion 
+            transformers with adjustments specific for large-scale simulations to yield a more scalable and 
+            versatile general-purpose transformer architecture, which can be used as the backbone for building 
+            large-scale foundation models in physical sciences. 
+          </p>
+          <p>  
+            We demonstrate that our proposed architecture outperforms state-of-the-art transformer 
+            architectures for computer vision on a large dataset of 16 different types of PDEs. 
+            We propose to embed different physical channels individually as spatio-temporal tokens, 
+            which interact via channel-wise self-attention. 
+            This helps to maintain a consistent information density of tokens when learning 
+            multiple types of PDEs simultaneously.
+          </p>
+          <p>
+            Our pre-trained models achieve improved performance on several challenging downstream 
+            tasks compared to training from scratch and also beat other foundation model architectures 
+            for physics simulations.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Overview Figure. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Architecture</h2>
+        <img src="./static/images/overview_pde_transformer.jpg" alt="Overview of PDE-Transformer architecture" width="100%">
+        <div class="content has-text-justified">
+          <p>
+            <br>
+            Data consisting of different physical channels is partitioned into patches and embedded into tokens. 
+            The multi-scale architecture combines up- and downsampling of tokens with skip connections between transformer stages of the same resolution. 
+            The attention operation is restricted to a local window of tokens. 
+            The window is shifted between two adjacent transformer blocks. 
+            Conditionings are embedded and used to scale and shift the intermediate token representations. 
+            <br>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Overview Figure. -->
+            <br>
+            <br>
+            <br>
+    <div class="columns is-centered">
+      <!-- Mixed Channels. -->
+      <div class="column">
+        <h2 class="title is-4">Mixed Channels</h2>
+        <div class="content">
+          <p>
+          The mixed channel (MC) version embeds different physical channels within the same token. 
+          This representation is more computationally efficient and tokens have a higher information density. 
+          However, it is less flexible transfer learning applications, 
+          because the types of channels need to be known at training time.
+          </p>
+        </div>
+      </div>
+      <!--/ Mixed Channels. -->
+      <!-- Separate Channels. -->
+      <div class="column">
+        <h2 class="title is-4">Separate Channels</h2>
+        <div class="columns is-centered">
+          <div class="column content">
+            <p>
+              The separate channel
+(SC) version embeds different physical channels independently, learning a more disentangled representation.
+Tokens of different physical channels only interact via axial self-attention
+over the channel dimension. The types of channel (velocity, density, etc.) are part of the conditioning, 
+which is distinct for each channel
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!--/ Separate Channels. -->
+    <br>
+    <br>
+    <!-- Performance. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Performance</h2>
+        <br>
+        <!-- Comparison to SOTA. -->
+        <h3 class="title is-4">Comparison to SOTA</h3>
+        <div class="content has-text-justified">
+          <p>
+             We compare PDE-Transformer to state-of-the-art transformer architectures for computer vision 
+             on our pretraining dataset of 16 different PDEs, in particular a modern 
+             <a href="https://github.com/tqch/ddpm-torch">UNet</a> architecture and Diffusion transformers with token up- and downsampling 
+             <a href="https://github.com/YuchuanTian/U-DiT">U-DiT</a>.
+             Additionally, we compare to scalable operator transformer <a href="https://github.com/camlab-ethz/poseidon">scOT</a> 
+             and <a href="https://github.com/BaratiLab/FactFormer">FactFormer</a>, both transformer-based architecture for physics simulations.
+             PDE-Transformer achieves superior performance while requiring less training time compared to other models.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/training_comparison_sota.png" alt="Training time on 4x H100 GPUs">
+          <div class="caption">
+            Training time comparison with state-of-the-art models on 4x H100 GPUs. 
+            PDE-Transformer achieves superior performance while requiring less training time compared to other models.
+          </div>
+        </div>
+        <br>
+        <br>
+        <div class="content has-text-centered">
+          <table class="table is-bordered is-striped">
+            <thead>
+              <tr>
+                <th>Architecture</th>
+                <th>Subquadratic Runtime</th>
+                <th>Non-square Domains</th>
+                <th>Periodic Boundaries</th>
+                <th>Advanced Conditioning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FactFormer</td>
+                <td><span style="color: orange">(✓)</span></td>
+                <td><span style="color: red">✗</span></td>
+                <td><span style="color: green">✓ optional</span></td>
+                <td><span style="color: red">✗</span></td>
+              </tr>
+              <tr>  
+                <td>UNet</td>
+                <td><span style="color: red">✗</span></td>
+                <td><span style="color: green">✓</span></td>
+                <td><span style="color: red">✗</span></td>
+                <td><span style="color: green">✓</span></td>
+              </tr>
+              <tr>
+                <td>scOT</td>
+                <td><span style="color: orange">(✓)</span></td>
+                <td><span style="color: red">✗</span></td>
+                <td><span style="color: green">✓</span> required</td>
+                <td><span style="color: red">✗</span></td>
+              </tr>
+              <tr>
+                <td>U-DiT</td>
+                <td><span style="color: red">✗</span></td>
+                <td><span style="color: green">✓</span></td>
+                <td><span style="color: red">✗</span></td>
+                <td><span style="color: green">✓</span></td>
+              </tr>
+              <tr>
+                <td>PDE-Transformer</td>
+                <td><span style="color: green">✓</span></td>
+                <td><span style="color: green">✓</span></td>
+                <td><span style="color: green">✓ optional</span></td>
+                <td><span style="color: green">✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="caption">
+            Comparison of capabilities across different architectures. PDE-Transformer combines the advantages of previous approaches while addressing their limitations.
+          </div>
+        </div>
+        <br>
+        <br>  
+        <h3 class="title is-4">Scaling Effects</h3>
+        <div class="columns is-centered">
+          <br>
+          <br>
+          <!-- Mixed Channels. -->
+          <div class="column">
+            <h2 class="title is-5">Patch size</h2>
+            <div class="content">
+              <div class="content has-text-centered">
+                <img src="static/images/scaling_patch_size_small.png" alt="Patch size" style="width: 40%;">
+                <div class="caption">
+                    Normalized test RMSE for different patch sizes. <br> Lower is better. 
+                </div>
+              </div>
+              <p>
+                The patch size is a key hyperparameter of the model.
+                We find that a patch size of 4x4 works well for all PDEs.
+                Larger patch sizes lead to fewer tokens and thus faster training, but performance may degrade.  
+                Smaller patch sizes lead to more tokens, requiring more floating point operations (FLOPs) and memory, but improve performance. 
+              </p>
+              
+            </div>
+          </div>
+          <!--/ Mixed Channels. -->
+    
+          <!-- Token embedding dimension. -->
+          <div class="column">
+            <h2 class="title is-5">Token embedding dimension</h2>
+            <div class="columns is-centered">
+              <div class="column content">
+                <div class="content has-text-centered">
+                  <img src="static/images/scaling_token_dimension_small.png" alt="Token embedding" style="width: 40%;">
+                  <div class="caption">
+                    Normalized test RMSE for different token embedding dimensions. 
+                  </div>
+                </div>
+                <p>
+                  The token embedding dimension is another key hyperparameter.
+                  Larger token embedding dimensions lead to a lower information content of tokens and 
+                  increase the memory footprint as well as the number of FLOPs. The model performance is improved.
+                  Smaller token embedding dimensions lead to a lower memory footprint and faster training time, 
+                  but the model may not be able to learn the PDEs as well.
+                </p>
+              
+              </div>
+    
+            </div>
+          </div>
+        </div>
+        <!--/ Token embedding dimension. -->
+      </div>
+    </div>
+    <!--/ Animation. -->
+    <br>
+    <br>
+    <!-- Finetuning. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Finetuning on Downstream Tasks</h2>
+        <div class="content has-text-justified">
+          <div class="columns is-centered">
+            <div class="column content">
+              <div class="content has-text-centered">
+                <br>
+                <br>
+                <img src="static/images/pretraining_improvements.png" alt="Pretraining improvements" style="width: 45%;">
+                <div class="caption">
+                  Performance improvements when finetuning on downstream tasks <br> compared to training from scratch. Higher is better.  
+                </div>
+              </div>
+              <br>
+              <br>
+              <p>We finetuning the pre-trained PDE-Transformer on different downstream tasks. Specifically, we consider 
+                the active matter, Rayleigh-Bénard convection, and shear flow datasets from 
+                <a href="https://polymathic-ai.org/the_well/">The Well</a>, which described non-linear phenomena arising in 
+                computational biology, fluid dynamics and thermodynamics. 
+              </p>
+              <p>The selected datasets have setups for periodic and 
+                 non-periodic boundary conditions, non-square domains, different physical channels and high resolutions of up to 512x256, demonstrating 
+                 the capabilities of PDE-Transformer.</p>
+            <p>We find that finetuning a pre-trained PDE-Transformer on these tasks improves the performance compared to training from scratch.
+              Importantly, finetuning is more efficient for the separate channel version, which learns a more disentangled representation of the physical channels.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/ Finetuning. -->
+  </div>
+</section>
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column">
+        <div class="content has-text-centered">
+          <img src="static/images/shear_flow_example.png" alt="Shear flow example">
+          <div class="caption">
+            Shear flow simulation, see <a href="https://polymathic-ai.org/the_well/">The Well</a>. Predicted density.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{holzschuh2025pde,
+  author    = {Holzschuh, Benjamin and Liu, Qiang and Kohl, Georg and Thuerey, Nils},
+  title     = {PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations},
+  booktitle = {Forty-second International Conference on Machine Learning, {ICML} 2025, Vancouver, Canada, July 13-19, 2025},
+  year      = {2025}
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="https://arxiv.org/abs/2505.24717">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      &nbsp;&nbsp;
+      <a class="icon-link" href="https://github.com/tum-pbs/pde-transformer" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Checkout the creators of the <a
+              href="https://github.com/nerfies/nerfies.github.io">original design</a> of this website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

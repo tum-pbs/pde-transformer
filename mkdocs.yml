@@ -1,0 +1,99 @@
+site_name: PDE-Transformer
+site_url: https://tum-pbs.github.io/pde-transformer
+repo_url: https://github.com/tum-pbs/pde-transformer
+repo_name: tum-pbs/pde-transformer
+site_description: Efficient and Versatile Transformers for Physics Simulations
+site_author: Benjamin Holzschuh
+use_directory_urls: false
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.path
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/img/favicon.png
+  logo: assets/img/logo.png
+
+extra_css:
+  - assets/css/extra.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [../src]
+          options:
+            show_source: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.mark
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tum-pbs/pde-transformer
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/pdetransformer
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+
+nav:
+  - Documentation:
+    - Overview: docs/index.md
+    - Getting Started: docs/getting-started.md
+    - Examples: docs/examples.md
+    - API Reference:
+        - Overview: docs/api/index.md
+        - Model Architecture: docs/api/architecture.md
+        - Data Handling: docs/api/data.md
+        - Utilities: docs/api/utils.md
+    - Datasets: docs/datasets.md
+    - Pretrained Models: docs/pretrained-weights.md 

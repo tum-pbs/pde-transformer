@@ -1,0 +1,84 @@
+[build-system]
+requires = ["setuptools>=64.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdetransformer"
+version = "0.1.0"
+description = "PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations"
+readme = "README.md"
+authors = [
+    { name = "Benjamin Holzschuh", email = "benjamin.holzschuh@tum.de" },
+]
+license = { text = "MIT" }
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.0.0",
+    "lightning",
+    "omegaconf",
+    "einops",
+    "lightning-bolts",
+    "torchvision",
+    "matplotlib",
+    "diffusers>=0.28.2",
+    "torch-fidelity",
+    "wandb>=0.12.10",
+    "numpy",
+    "transformers>=4.42.3",
+    "accelerate",
+    "moviepy",
+    "pandas",
+    "imageio",
+    "timm",
+    "seaborn",
+    "vape4d",
+    "torchprofile",
+    "adabelief_pytorch",
+    "pbdl",
+]
+
+[project.urls]
+Homepage = "https://tum-pbs.github.io/pde-transformer"
+Repository = "https://github.com/tum-pbs/pde-transformer.git" 
+
+[tool.black]
+line-length = 88
+target-version = ['py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | docs
+  )/
+)
+'''
+
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["pdetransformer*"]  # package names should match these glob patterns (["*"] by default)
+exclude = []  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)

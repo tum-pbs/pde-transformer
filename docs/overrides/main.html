@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if page and page.url and page.url == "/" %}
+    {% include "landing.html" %}
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %} 
