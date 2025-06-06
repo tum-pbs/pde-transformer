@@ -5,3 +5,4 @@ mkdocstrings==0.26.0
 mkdocstrings-python==1.10.9
 mknotebooks==0.8.0
 griffe==1.2.0
+mkdocs-git-revision-date-localized-plugin
