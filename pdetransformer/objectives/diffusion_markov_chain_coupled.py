@@ -1,10 +1,10 @@
-from src.objectives.training_objective import TrainingObjective
+from .training_objective import TrainingObjective
 
 from typing import Tuple, Dict
 import torch.nn as nn
 import torch
 
-from src.utils import instantiate_from_config
+from ..utils import instantiate_from_config
 
 class DiffusionMarkovChainCoupled(TrainingObjective):
 

@@ -6,9 +6,8 @@ from lightning.fabric.utilities import rank_zero_only
 
 from omegaconf import DictConfig, OmegaConf
 
-from pdetransformer.callback import EMA
-from pdetransformer.callback.ema import EMAOptimizer
-from pdetransformer.utils import instantiate_from_config, get_pipeline
+from .ema import EMA, EMAOptimizer
+from ..utils import instantiate_from_config, get_pipeline
 
 import os
 

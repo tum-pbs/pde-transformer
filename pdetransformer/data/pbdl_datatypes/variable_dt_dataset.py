@@ -1,5 +1,5 @@
-from pbdl.torch.dataset import Dataset as PBDLDataset
-from pbdl.utilities import get_sel_const_sim
+from ..pbdl_dataloader.dataset import Dataset as PBDLDataset
+from ..pbdl_dataloader.utilities import get_sel_const_sim
 import numpy as np
 
 

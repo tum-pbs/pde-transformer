@@ -1,19 +1,19 @@
 rmse:
-  target: src.metric.SimulationRMSE3D
+  target: pdetransformer.metric.SimulationRMSE3D
   params:
     frequency: 1
     num_tasks: 30
     max_length: 100
     dataset_names: ${data.params.dataset_names}
 mse:
-  target: src.metric.SimulationMSE3D
+  target: pdetransformer.metric.SimulationMSE3D
   params:
     frequency: 1
     num_tasks: 30
     max_length: 100
     dataset_names: ${data.params.dataset_names}
 mae:
-  target: src.metric.SimulationMAE3D
+  target: pdetransformer.metric.SimulationMAE3D
   params:
     frequency: 1
     num_tasks: 30

@@ -1,5 +1,5 @@
 project: ape-transformers-mse
-name: pde-mc-l-mse
+name: pde-mc-b-mse
 
 batch_size: 8
 max_epochs: 100
@@ -36,7 +36,7 @@ model:
             sample_size: ${sample_size}
             in_channels: ${in_channels}
             out_channels: ${out_channels}
-            type: PDE-L
+            type: PDE-B
             patch_size: ${patch_size}
             periodic: True
             carrier_token_active: False

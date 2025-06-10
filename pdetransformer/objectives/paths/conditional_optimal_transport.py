@@ -1,4 +1,4 @@
-from src.objectives.paths.path_base import PathBase
+from .path_base import PathBase
 import torch
 class ConditionalOptimalTransport(PathBase):
     """

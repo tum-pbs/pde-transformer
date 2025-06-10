@@ -6,8 +6,7 @@ import numpy as np
 
 import torch
 from torch.utils.data import Dataset, Subset
-from pbdl.torch.dataset import Dataset as PBDLDataset
-
+from .pbdl_dataloader.torch.dataset import Dataset as PBDLDataset
 from .pbdl_datatypes.variable_dt_dataset import VariableDtDataset
 from .metadata_remapping import convert_pde, convert_fields, convert_constants
 from .metadata_remapping import convert_domain_extent, convert_dt, convert_reynolds_number, convert_boundary_conditions

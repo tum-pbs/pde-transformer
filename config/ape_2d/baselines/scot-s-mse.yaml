@@ -17,9 +17,9 @@ num_train_timesteps: 20
 
 pipelines:
     default:
-      target: src.sampler.pipeline.VideoPipeline
+      target: pdetransformer.sampler.pipeline.VideoPipeline
       scheduler:
-        target: src.sampler.scheduler.OdeEulerScheduler
+        target: pdetransformer.sampler.scheduler.OdeEulerScheduler
         params:
           num_train_timesteps: ${num_train_timesteps}
           sigma_min: ${sigma_min}
@@ -32,10 +32,10 @@ sample_size: 256
 sigma_min: 1e-4
 
 model:
-    target: src.core.training.SingleStepSupervised
+    target: pdetransformer.core.mixed_channels.SingleStepSupervised
     params:
         model:
-          target: src.core.mixed_channels.scot.ScalableOperatorTransformer
+          target: pdetransformer.core.mixed_channels.scot.ScalableOperatorTransformer
           params:
             in_channels: 2
             sample_size: ${sample_size}
@@ -49,7 +49,7 @@ unrolling_steps: 1
 test_unrolling_steps: 29
 
 data:
-  _file: config/icml/transformer_comparison/data/multi_task_norm.yaml
+  _file: config/ape_2d/data/multi_task_norm.yaml
 
 frequency_log_images: 40
 frequency_log_metrics: 40
@@ -58,11 +58,11 @@ frequency_store_pipelines: 40
 callbacks:
   _file: config/default_callbacks.yaml
   ema:
-    target: src.callback.EMA
+    target: pdetransformer.callback.EMA
     params:
       decay: 0.999
   images:
-    target: src.callback.MultiTaskVideoLoggerCustom
+    target: pdetransformer.callback.MultiTaskVideoLoggerCustom
     params:
       frequency: ${frequency_log_images}
       num_frames: 29
@@ -70,9 +70,9 @@ callbacks:
       test_only: True
       disabled: True
       prepare_plots:
-        target: src.data.pbdl_module.prepare_plots
+        target: pdetransformer.data.pbdl_module.prepare_plots
   simulation:
-    target: src.callback.Simulation2DMetricLoggerCustom
+    target: pdetransformer.callback.Simulation2DMetricLoggerCustom
     params:
       frequency: ${frequency_log_metrics}
       batch_size: ${batch_size}
@@ -82,7 +82,7 @@ callbacks:
       metric_config:
         _file: config/default_simulation_metrics.yaml
   emagrad:
-    target: src.callback.EmaGradClip
+    target: pdetransformer.callback.EmaGradClip
     params:
       ema_coef1: 0.9
       ema_coef2: 0.99

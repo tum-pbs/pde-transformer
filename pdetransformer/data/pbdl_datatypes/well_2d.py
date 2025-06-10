@@ -3,9 +3,9 @@ from typing import Optional
 import torch
 from torch.utils.data import random_split
 from torchvision.transforms.v2 import Transform, ToDtype, Compose, Lambda, Normalize, RandomHorizontalFlip, RandomVerticalFlip
-from pbdl.torch.dataset import Dataset as PBDLDataset
+from ..pbdl_dataloader.dataset import Dataset as PBDLDataset
 from typing import Sequence
-from pbdl.utilities import get_sel_const_sim
+from ..pbdl_dataloader.utilities import get_sel_const_sim
 import numpy as np
 
 from .variable_dt_dataset import VariableDtDataset

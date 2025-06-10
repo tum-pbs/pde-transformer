@@ -5,7 +5,7 @@ from .sampler_base import SamplerBase
 import torch.nn as nn
 import torch
 
-from src.objectives.diffusion.diffusion_base import DiffusionBase
+from ..objectives.diffusion.diffusion_base import DiffusionBase
 
 
 class AncestralSampler(SamplerBase):

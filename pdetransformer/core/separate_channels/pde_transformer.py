@@ -18,9 +18,8 @@ from timm.models.layers import trunc_normal_, DropPath
 import torch
 from transformers.pytorch_utils import meshgrid, find_pruneable_heads_and_indices, prune_linear_layer
 
-from pdetransformer.core.mixed_channels.udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb
-
-from pdetransformer.core.mixed_channels.pde_transformer import Mlp
+from ..mixed_channels.udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb
+from ..mixed_channels.pde_transformer import Mlp
 
 
 # Copied from transformers.models.swin.modeling_swin.window_partition

@@ -1,5 +1,5 @@
 from omegaconf import DictConfig
-from src.utils import instantiate_from_config
+from ..utils import instantiate_from_config
 from torchmetrics import Metric
 
 def get_metrics(config: DictConfig):

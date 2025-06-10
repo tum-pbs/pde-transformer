@@ -1,5 +1,5 @@
 setup_callback:
-    target: "src.callback.setup_callback.SetupCallback"
+    target: "pdetransformer.callback.setup_callback.SetupCallback"
     params:
         resume: ${runtime.resume}
         logdir: ${runtime.logdir}

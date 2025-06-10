@@ -1,5 +1,5 @@
 project: ape-transformers-mse
-name: pde-mc-l-mse
+name: pde-sc-l-mse
 
 batch_size: 8
 max_epochs: 100
@@ -14,6 +14,7 @@ trainer:
         accumulate_grad_batches: 8
         precision: bf16-mixed
 
+
 num_train_timesteps: 20
 
 pipelines:
@@ -21,29 +22,28 @@ pipelines:
       target: pdetransformer.sampler.pipeline.VideoPipelineDirect
 
 patch_size: 4
-in_channels: 2
-out_channels: 2
-sample_size: 128
+sample_size: 256
 
 sigma_min: 1e-4
+timesteps: 2
 
 model:
-    target: pdetransformer.core.mixed_channels.SingleStepSupervised
+    target: pdetransformer.core.separate_channels.Supervised
     params:
         model:
-          target: pdetransformer.core.mixed_channels.PDETransformer
+          target: pdetransformer.core.separate_channels.PDETransformer
           params:
             sample_size: ${sample_size}
-            in_channels: ${in_channels}
-            out_channels: ${out_channels}
+            num_timesteps: ${timesteps}
             type: PDE-L
             patch_size: ${patch_size}
             periodic: True
             carrier_token_active: False
         monitor: val/loss_epoch
         ckpt_path: ${runtime.checkpoint_dir}
-        image_key: 0
+        timesteps: ${timesteps}
         optimizer: adamw
+
 
 unrolling_steps: 1
 test_unrolling_steps: 29
@@ -51,14 +51,14 @@ test_unrolling_steps: 29
 data:
   _file: config/ape_2d/data/multi_task_norm.yaml
 
-frequency_log_images: 100
-frequency_log_metrics: 100
+frequency_log_images: 1
+frequency_log_metrics: 1
 frequency_store_pipelines: 100
 
 callbacks:
   _file: config/default_callbacks.yaml
   ema:
-    target: pdetransformer.callback.EMA
+    target: src.callback.EMA
     params:
       decay: 0.999
   images:
@@ -68,6 +68,7 @@ callbacks:
       num_frames: 29
       num_inference_steps: 40
       test_only: True
+      disabled: True
       prepare_plots:
         target: pdetransformer.data.pbdl_module.prepare_plots
   simulation:
@@ -87,6 +88,7 @@ callbacks:
       ema_coef2: 0.99
       max_norm_ratio: 2.0
       clip_norm_ratio: 1.1
+
 
 
 

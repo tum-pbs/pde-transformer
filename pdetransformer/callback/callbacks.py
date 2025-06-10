@@ -1,4 +1,4 @@
-from pdetransformer.utils import instantiate_from_config
+from ..utils import instantiate_from_config
 
 
 def get_callbacks(config):

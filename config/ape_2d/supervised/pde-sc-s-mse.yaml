@@ -1,5 +1,5 @@
 project: ape-transformers-mse
-name: pde-sc-b-mse-t2
+name: pde-sc-s-mse
 
 batch_size: 8
 max_epochs: 100
@@ -19,7 +19,7 @@ num_train_timesteps: 20
 
 pipelines:
     default:
-      target: src.sampler.pipeline.VideoPipelineDirect
+      target: pdetransformer.sampler.pipeline.VideoPipelineDirect
 
 patch_size: 4
 sample_size: 256
@@ -28,14 +28,14 @@ sigma_min: 1e-4
 timesteps: 2
 
 model:
-    target: src.core.separate_channels.Supervised
+    target: pdetransformer.core.separate_channels.Supervised
     params:
         model:
-          target: src.core.separate_channels.PDETransformer
+          target: pdetransformer.core.separate_channels.PDETransformer
           params:
             sample_size: ${sample_size}
             num_timesteps: ${timesteps}
-            type: PDE-B
+            type: PDE-S
             patch_size: ${patch_size}
             periodic: True
             carrier_token_active: False
@@ -62,7 +62,7 @@ callbacks:
     params:
       decay: 0.999
   images:
-    target: src.callback.MultiTaskVideoLoggerCustom
+    target: pdetransformer.callback.MultiTaskVideoLoggerCustom
     params:
       frequency: ${frequency_log_images}
       num_frames: 29
@@ -70,9 +70,9 @@ callbacks:
       test_only: True
       disabled: True
       prepare_plots:
-        target: src.data.pbdl_module.prepare_plots
+        target: pdetransformer.data.pbdl_module.prepare_plots
   simulation:
-    target: src.callback.Simulation2DMetricLoggerCustom
+    target: pdetransformer.callback.Simulation2DMetricLoggerCustom
     params:
       frequency: ${frequency_log_metrics}
       batch_size: ${batch_size}
@@ -82,7 +82,7 @@ callbacks:
       metric_config:
         _file: config/default_simulation_metrics.yaml
   emagrad:
-    target: src.callback.EmaGradClip
+    target: pdetransformer.callback.EmaGradClip
     params:
       ema_coef1: 0.9
       ema_coef2: 0.99

@@ -5,11 +5,11 @@ from abc import ABC
 
 from omegaconf import DictConfig
 
-from src.objectives.diffusion.diffusion_base import DiffusionBase
+from ..objectives.diffusion.diffusion_base import DiffusionBase
 
 import torch
 
-from src.utils import instantiate_from_config
+from ..utils import instantiate_from_config
 
 
 class SamplerBase(ABC, nn.Module):

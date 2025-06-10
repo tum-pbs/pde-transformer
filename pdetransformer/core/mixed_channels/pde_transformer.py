@@ -15,7 +15,7 @@ import numpy as np
 from timm.models.layers import DropPath
 import torch
 
-from pdetransformer.core.mixed_channels.udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb
+from .udit import FinalLayer, precompute_freqs_cis_2d, apply_rotary_emb
 
 ###############################
 # We need to create subclass of Swinv2PreTrainedModel because it sets use_mask_token=True

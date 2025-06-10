@@ -3,10 +3,10 @@ from typing import Tuple, Dict
 import torch
 from torch import nn as nn
 
-from src.objectives.paths import PathBase
-from src.objectives.training_objective import TrainingObjective
-from src.objectives.utils import sample_time, get_weighting_function
-from src.utils import instantiate_from_config
+from .paths import PathBase
+from .training_objective import TrainingObjective
+from .utils import sample_time, get_weighting_function
+from ..utils import instantiate_from_config
 
 class LipmanFlowMatching(TrainingObjective):
     """
