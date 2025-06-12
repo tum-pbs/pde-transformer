@@ -1125,7 +1125,7 @@ class PDEImpl(nn.Module):
             in_channels: int = 4,
             out_channels: int = 4,
             window_size: int = 8,
-            patch_size: Optional[int] = None,
+            patch_size: Optional[int] = 4,
             hidden_size: int = 96,
             max_hidden_size: int = 2048,
             depth= [2, 4, 4, 6, 4, 4, 2],
@@ -1133,8 +1133,8 @@ class PDEImpl(nn.Module):
             mlp_ratio: float = 4.0,
             class_dropout_prob: float = 0.1,
             num_classes=1000,
-            periodic=False,
-            carrier_token_active: bool = True,
+            periodic=True,
+            carrier_token_active: bool = False,
             **kwargs
     ):
         super().__init__()
@@ -1145,6 +1145,7 @@ class PDEImpl(nn.Module):
         self.in_channels = in_channels
         self.out_channels = out_channels
 
+        self.num_classes = num_classes
         self.num_heads = num_heads
         self.periodic = periodic
 
@@ -1278,9 +1279,23 @@ class PDEImpl(nn.Module):
         Forward pass of PDE transformer.
         x: (N, C, H, W) tensor of spatial inputs (images or latent representations of images)
         t: (N, ) tensor of diffusion timesteps
-        y: (N, ) tensor of class labels
+        y: (N, ) tensor of class labels [int]
         """
         x = self.x_embedder(x)  # (N, C, H, W)
+
+        if t is None:
+            t = torch.Tensor([0]).to(x.device)
+
+        if len(t.shape) == 0:
+            t = t.unsqueeze(0)
+            t = t.repeat(x.shape[0])
+            t = t.to(x.device)
+
+        # timestep scaling (from 0 - 1 to 0 - 1000)
+        t = t * 1000.0       
+
+        if y is None:
+            y = torch.ones(x.shape[0], dtype=torch.long, device=x.device) * self.num_classes
 
         emb_list = []
         for i in range(self.num_encoder_layers + 1):
@@ -1353,10 +1368,10 @@ class PDETransformer(ModelMixin, ConfigMixin):
             in_channels: int,
             out_channels: int,
             type: str,
-            periodic: bool = False,
-            carrier_token_active: bool = True,
+            periodic: bool = True,
+            carrier_token_active: bool = False,
             window_size: int = 8,
-            patch_size: Optional[int] = None,
+            patch_size: Optional[int] = 4,
             **kwargs
     ):
         super(PDETransformer, self).__init__()
@@ -1379,17 +1394,6 @@ class PDETransformer(ModelMixin, ConfigMixin):
             cross_attention_kwargs: Dict[str, Any] = None,
             return_dict: bool = True,
     ):
-
-        if timestep is None:
-            timestep = torch.Tensor([0]).to(hidden_states.device)
-
-        if len(timestep.shape) == 0:
-            timestep = timestep.unsqueeze(0)
-            timestep = timestep.repeat(hidden_states.shape[0])
-            timestep = timestep.to(hidden_states.device)
-
-        # timestep scaling (from 0 - 1 to 0 - 1000)
-        timestep = timestep * 1000.0
 
         output = self.model.forward(hidden_states, timestep, class_labels)
 
