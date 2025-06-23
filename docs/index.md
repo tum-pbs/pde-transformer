@@ -1,67 +1,33 @@
-# PDE-Transformer
+# PDE-Transformer Documentation
 
-<div class="grid cards" markdown>
+Welcome to the documentation for PDE-Transformer, a state-of-the-art neural architecture for physics simulations, specifically designed for partial differential equations (PDEs) on regular grids.
 
-- :rocket: **Efficient Processing**
-    
-    Optimized attention mechanisms for physical simulations
+## Overview
 
-- :dart: **High Accuracy**
-    
-    State-of-the-art results on various physics simulation tasks
+PDE-Transformer is designed to efficiently process and predict the evolution of physical systems described by partial differential equations (PDEs). Our model provides:
 
-- :arrows_counterclockwise: **Versatile**
-    
-    Works with different types of PDEs and physical systems
+- **Production Ready**: Available as a pip package for easy installation and experimentation
+- **State-of-the-Art Performance**: Outperforms existing methods across a wide range different types of PDEs
+- **Transfer Learning**: Improved performance when adapting pre-trained models to new physics problems
+- **Open Source**: Full implementation with pre-trained models and documentation
 
-- :chart_with_upwards_trend: **Scalable**
-    
-    Handles both small and large-scale simulations effectively
+## Key Features
 
-</div>
+### Architecture
+- Multi-scale transformer architecture with token down- and upsampling for efficient modeling
+- Shifted window attention for improved scaling to high-resolution data
+- Mixed Channel (MC) and Separate Channel (SC) representations
+- Flexible conditioning mechanism for PDE parameters and metadata
 
-## Abstract
+### Different Pretraining Datasets
+- **Linear PDEs**: Diffusion
+- **Nonlinear PDEs**: Burgers, Korteweg-de-Vries, Kuramoto-Sivashinsky
+- **Reaction-Diffusion**: Fisher-KPP, Swift-Hohenberg, Gray-Scott
+- **Fluid Dynamics**: Navier-Stokes (Decaying Turbulence, Kolmogorov Flow)
 
-We introduce PDE-Transformer, an improved transformer-based architecture for surrogate modeling of physics simulations on regular grids. We combine recent architectural improvements of diffusion transformers with adjustments specific for large-scale simulations to yield a more scalable and versatile general-purpose transformer architecture, which can be used as the backbone for building large-scale foundation models in physical sciences.
-
-We demonstrate that our proposed architecture outperforms state-of-the-art transformer architectures for computer vision on a large dataset of 16 different types of PDEs. We propose to embed different physical channels individually as spatio-temporal tokens, which interact via channel-wise self-attention. This helps to maintain a consistent information density of tokens when learning multiple types of PDEs simultaneously.
-
-Our pre-trained models achieve improved performance on several challenging downstream tasks compared to training from scratch and also beat other foundation model architectures for physics simulations.
-
-## Paper
-
-[PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations](https://arxiv.org/abs/2505.24717)<br>
-[Benjamin Holzschuh](https://www.linkedin.com/in/benjamin-holzschuh/), Qiang Liu, Georg Kohl, [Nils Thuerey](https://ge.in.tum.de/about/n-thuerey/)<br>
-Technical University of Munich<br>
-International Conference on Machine Learning (ICML) 2025
-
-```bibtex
-@article{holzschuh2025pde,
-  author    = {Holzschuh, Benjamin and Liu, Qiang and Kohl, Georg and Thuerey, Nils},
-  title     = {PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations},
-  booktitle = {Forty-second International Conference on Machine Learning, {ICML} 2025, Vancouver, Canada, July 13-19, 2025},
-  year      = {2025}
-}
-```
-
-## Results
-
-### Performance Comparison
-
-We compare PDE-Transformer to state-of-the-art transformer architectures for computer vision on our pretraining dataset of 16 different PDEs, in particular a modern [UNet](https://github.com/tqch/ddpm-torch) architecture and Diffusion transformers with token up- and downsampling [U-DiT](https://github.com/YuchuanTian/U-DiT). Additionally, we compare to scalable operator transformer [scOT](https://github.com/camlab-ethz/poseidon) and [FactFormer](https://github.com/BaratiLab/FactFormer), both transformer-based architecture for physics simulations. PDE-Transformer achieves superior performance while requiring less training time compared to other models.
-
-<figure markdown>
-  ![Training Comparison](static/images/training_comparison_sota.png){ width="600" }
-  <figcaption>Training time comparison with state-of-the-art models on 4x H100 GPUs. PDE-Transformer achieves superior performance while requiring less training time compared to other models.</figcaption>
-</figure>
-
-| Architecture | Subquadratic Runtime | Non-square Domains | Periodic Boundaries | Advanced Conditioning |
-|--------------|---------------------|-------------------|-------------------|---------------------|
-| FactFormer | (✓) | ✗ | ✓ optional | ✗ |
-| UNet | ✗ | ✓ | ✗ | ✓ |
-| scOT | (✓) | ✗ | ✓ required | ✗ |
-| U-DiT | ✗ | ✓ | ✗ | ✓ |
-| **PDE-Transformer** | **✓** | **✓** | **✓ optional** | **✓** |
+### Training Objectives
+- **Supervised Training**: Direct MSE loss for deterministic, unique solutions
+- **Flow Matching**: For probabilistic modeling and uncertainty quantification
 
 ## Code
 
@@ -74,11 +40,24 @@ pip install pdetransformer
 # Install from source
 git clone https://github.com/tum-pbs/pde-transformer
 cd pde-transformer
-pip install -e ".[dev]"
+pip install -e .
 ```
 
 For detailed documentation, see our [Documentation](getting-started.md).
 
+
+## Citation
+
+If you use PDE-Transformer in your research, please cite:
+
+```bibtex
+@article{holzschuh2025pde,
+  title={PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations},
+  author={Holzschuh, Benjamin and Liu, Qiang and Kohl, Georg and Thuerey, Nils},
+  booktitle={Forty-second International Conference on Machine Learning, {ICML} 2025, Vancouver, Canada, July 13-19, 2025},
+  year={2025}
+}
+```
 
 ## Acknowledgments
 

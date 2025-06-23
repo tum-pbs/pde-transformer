@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Tuple, Dict, Any, Optional
+from typing import Tuple, Dict, Any, Optional, Union
 
 import torch
 import torch.nn as nn
@@ -80,6 +80,41 @@ def get_masked_channel_inputs(channels: list[torch.Tensor],
                       for out, height, width in zip(output, heights, widths)]
 
     return output
+
+def preprocess_batch_autoregressive(batch: dict, 
+                                    patch_size: int,
+                                    timesteps: int, 
+                                    num_frames: int,
+                                    device) -> dict:
+
+    task = ForwardPrediction(patch_size=patch_size, num_timesteps=timesteps,
+                                               m=timesteps-1, n=1, task_idx=0)
+
+    batch['data'] = batch['data'].to(device)
+    batch['constants'] = batch['constants'].to(device)
+    batch['constants_norm'] = batch['constants_norm'].to(device)
+    batch['time_step_stride'] = batch['time_step_stride'].to(device)
+    batch['physical_metadata'] = {k: v.to(device) for k, v in batch['physical_metadata'].items()}
+
+    task_masking = TaskMasking([task], [1.0], patch_size=patch_size)
+
+    data = task_masking.get_data(batch)
+
+    frames = torch.stack([channel['channel'][:,:timesteps - 1] for channel in data['channels']], dim=1)
+    reference = torch.stack([channel['channel'][:,:num_frames] for channel in data['channels']], dim=1)
+
+    frames = list(torch.permute(frames, (2, 0, 1, 3, 4)))
+    reference = list(torch.permute(reference, (2, 0, 1, 3, 4)))
+
+    for channel in data['channels']:
+        channel['channel'] = channel['channel'][:,:timesteps]
+
+    masks = task.prepare_data(data, prob=0.0)
+
+    data.update(masks)
+
+    return data
+    
 
 def get_model_input(batch: dict, patch_size: int) -> Tuple:
 
@@ -216,7 +251,8 @@ import lightning
 
 class Supervised(lightning.LightningModule):
 
-    def __init__(self, model: dict,
+    def __init__(self, 
+                 model: Union[dict, nn.Module],
                  ckpt_path=None,
                  ignore_keys=None,
                  monitor: str = "val/loss_epoch",
@@ -233,7 +269,11 @@ class Supervised(lightning.LightningModule):
         self.optimizer = optimizer
 
         self.patch_size = patch_size
-        self.model = instantiate_from_config(model)
+
+        if isinstance(model, dict):
+            self.model: nn.Module = instantiate_from_config(model)
+        else:
+            self.model = model
 
         self.timesteps = timesteps
         self.weighting = "constant"

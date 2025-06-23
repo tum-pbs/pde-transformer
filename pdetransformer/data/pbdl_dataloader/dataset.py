@@ -76,6 +76,7 @@ class Dataset:
         _load_index()
 
         if dset_name in local_index.keys():
+        
             dset_file = os.path.join(
                 config["local_datasets_dir"], dset_name + config["dataset_ext"]
             )
@@ -102,6 +103,7 @@ class Dataset:
             )
             self._load_dataset(dset_name, dset_file)
         else:
+            print(global_index.keys())
             suggestions = ", ".join(datasets())
             fail(
                 f"Dataset '{dset_name}' not found, datasets available are: {suggestions}."

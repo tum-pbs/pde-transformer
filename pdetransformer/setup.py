@@ -42,7 +42,9 @@ def get_config(opt, unknown):
     try:
         configs = [parse_config(OmegaConf.load(cfg)) for cfg in opt.config]
         cli = OmegaConf.from_dotlist(unknown)
+        print(cli)
         config = OmegaConf.merge(*configs, cli)
+        print(config.trainer)
 
     except Exception as e:
         rank_zero_warn('Failed to load configs')
@@ -103,10 +105,7 @@ def get_config(opt, unknown):
     if config.debug:
         os.environ["TORCH_CPP_LOG_LEVEL"] = "INFO"
         os.environ["TORCH_DISTRIBUTED_DEBUG"] = "DETAIL"
-
-    config.no_test = opt.no_test
-    rank_zero_info(f'No tests after training: {config.no_test}')
-
+        
     checkpoint_dir = logdir.joinpath('checkpoint')
     checkpoint_dir.mkdir(exist_ok=True)
 

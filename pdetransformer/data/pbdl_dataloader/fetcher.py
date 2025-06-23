@@ -8,7 +8,7 @@ from . import normalization as norm
 import pkg_resources
 import sys
 
-from .logging import info, success, warn, fail
+from .logging import info, success, warn, fail, DARKGREY, SUCCESS_CYAN, ENDC
 
 
 def dl_parts(dset: str, config, sims: list[int] = None, disable_progress=False):
@@ -31,6 +31,7 @@ def dl_single_file(dset: str, config, disable_progress=False):
 
     if os.path.exists(dest):
         # dataset already downloaded
+        print(f"Dataset {dset} already downloaded in {dest}")
         return
 
     prog_hook = None if disable_progress else print_download_progress
@@ -44,7 +45,7 @@ def fetch_index(config):
 
 def dl_single_file_from_huggingface(dset: str, dest: str, config, prog_hook=None):
     repo_id = config["hf_repo_id"]
-    url_ds = f"https://huggingface.co/datasets/{repo_id}/resolve/main/{dset}/data{config['dataset_ext']}"
+    url_ds = f"https://huggingface.co/datasets/{repo_id}/resolve/main/{dset}/{dset}{config['dataset_ext']}"
 
     with urllib.request.urlopen(url_ds) as response:
         total_size = int(response.info().get("Content-Length").strip())
@@ -138,7 +139,7 @@ def fetch_index_from_huggingface(config):
         first_level_dirs = {file.split("/")[0] for file in files if "/" in file}
 
         first_level_dirs_data_file = {
-            d for d in first_level_dirs if f"{d}/data{config['dataset_ext']}" in files
+            d for d in first_level_dirs if f"{d}/{d}{config['dataset_ext']}" in files
         }
 
         datasets_part = first_level_dirs - first_level_dirs_data_file
@@ -209,9 +210,9 @@ def print_download_progress(count, block_size, total_size, message=None):
     bar_length = 50
     bar = (
         "━" * int(percent / 2)
-        + logging.DARKGREY
+        + DARKGREY
         + "━" * (bar_length - int(percent / 2))
-        + logging.SUCCESS_CYAN
+        + SUCCESS_CYAN
     )
 
     def format_size(size):
@@ -225,11 +226,11 @@ def print_download_progress(count, block_size, total_size, message=None):
     total_str = format_size(total_size)
 
     sys.stdout.write(
-        logging.SUCCESS_CYAN
+        SUCCESS_CYAN
         + "\r\033[K"
         + (message if message else f"{downloaded_str} / {total_str}")
         + f"\t {bar} {percent}%"
-        + logging.ENDC
+        + ENDC
     )
     sys.stdout.flush()
 

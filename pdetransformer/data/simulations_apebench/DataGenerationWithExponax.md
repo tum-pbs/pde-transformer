@@ -1,12 +1,12 @@
 # Installation
-The [exponax package](https://pypi.org/project/exponax/) requires [jax](https://jax.readthedocs.io/en/latest/installation.html), and it is recommended to installed the simulation to a separate conda environment. To install follow these steps:
+The [exponax package](https://pypi.org/project/exponax/) requires [jax](https://jax.readthedocs.io/en/latest/installation.html), and it is recommended to install the simulation to a separate conda environment. To install follow these steps:
 ```bash
 conda create -n exponax python=3.12
 conda activate exponax
 ```
 Install required packages:
 ```bash
-pip install -r src/data/simulations_apebench/requirementsExponax.txt
+pip install -r pdetransformer/data/simulations_apebench/requirementsExponax.txt
 ```
 
 
@@ -99,7 +99,6 @@ The following PDEs are supported in 2D:
     - Longer Rollout Test set with [s=5, t=200, c=1, x=2048, y=2048]
 
 The individual parameters for each PDE setup are also described in more detail in `simulation_setups_2d.py`.
-
 
 # Supported PDEs in 3D
 The following PDEs are supported in 3D:

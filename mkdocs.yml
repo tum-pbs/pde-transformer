@@ -87,13 +87,14 @@ extra:
 
 nav:
   - Documentation:
-    - Overview: docs/index.md
-    - Getting Started: docs/getting-started.md
-    - Examples: docs/examples.md
-    - API Reference:
-        - Overview: docs/api/index.md
-        - Model Architecture: docs/api/architecture.md
-        - Data Handling: docs/api/data.md
-        - Utilities: docs/api/utils.md
-    - Datasets: docs/datasets.md
-    - Pretrained Models: docs/pretrained-weights.md 
+    - Overview: index.md
+    - Getting Started: getting_started.md
+    - Model Types:
+        - Mixed Channel: mixed_channel.md
+        - Separate Channel: separate_channel.md
+    - Training Setups: training.md
+    - Datasets: 
+        - Overview: datasets/overview.md
+        - APE 2D: datasets/ape_2d.md
+        - The Well: datasets/the_well.md  
+    - Pretrained Models: pretrained-weights.md 

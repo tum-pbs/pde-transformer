@@ -1256,7 +1256,7 @@ class HATDiTBlock(nn.Module):
 
 class PDEImpl(nn.Module):
     """
-    Diffusion UNet model with a Transformer backbone.
+    PDE Transformer model for separate channels.
     """
 
     def __init__(
@@ -1431,7 +1431,7 @@ class PDEImpl(nn.Module):
                 t: list[torch.Tensor],  # list of tensors with shape B
                ):
         """
-        Forward pass of SwinDiT.
+        Forward pass of PDETransformer.
         x (torch.Tensor): input tensor of shape (B, C, T, H, W).
         simulation_time (torch.Tensor): simulation time tensor of shape (B, C).
         channel_type (torch.Tensor): channel type tensor of shape (B, C).
@@ -1585,9 +1585,9 @@ class PDEImpl(nn.Module):
         return torch.cat([eps, rest], dim=1)
 
 @dataclass
-class SwinDiTOutput(BaseOutput):
+class PDETransformerOutput(BaseOutput):
     """
-    The output of [`SwinDiT`].
+    The output of [`PDETransformer`].
 
     Args:
         sample (`torch.Tensor` of shape `(batch_size, num_channels, height, width)`):
@@ -1664,7 +1664,7 @@ class PDETransformer(ModelMixin, ConfigMixin):
         if not return_dict:
             return (output,)
 
-        return SwinDiTOutput(sample=output)
+        return PDETransformerOutput(sample=output)
 
 
 #################################################################################

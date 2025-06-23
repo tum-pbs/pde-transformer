@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 from torch.nn.functional import mse_loss
 
@@ -12,7 +12,7 @@ import numpy as np
 
 class SingleStepSupervised(lightning.LightningModule):
     def __init__(self,
-                 model,
+                 model: Union[dict, nn.Module],
                  ckpt_path=None,
                  ignore_keys=None,
                  image_key=0,
@@ -27,8 +27,10 @@ class SingleStepSupervised(lightning.LightningModule):
         self.optimizer = optimizer
         self.normalize_channels = normalize_channels
 
-        # Score model
-        self.model: nn.Module = instantiate_from_config(model)
+        if isinstance(model, dict):
+            self.model: nn.Module = instantiate_from_config(model)
+        else:
+            self.model = model
 
         if monitor is not None:
             self.monitor = monitor

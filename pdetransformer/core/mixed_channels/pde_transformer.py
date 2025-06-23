@@ -1389,7 +1389,7 @@ class PDETransformer(ModelMixin, ConfigMixin):
     def forward(
             self,
             hidden_states: torch.Tensor,
-            timestep: Optional[torch.LongTensor] = None,
+            timestep: Optional[torch.Tensor] = None,
             class_labels: Optional[torch.LongTensor] = None,
             cross_attention_kwargs: Dict[str, Any] = None,
             return_dict: bool = True,
@@ -1408,16 +1408,13 @@ class PDETransformer(ModelMixin, ConfigMixin):
 
 
 def PDE_S(**kwargs):
-    return PDEImpl(down_factor=2, hidden_size=96, num_heads=4, depth=[2, 5, 8, 5, 2], ffn_type='rep', rep=1, mlp_ratio=4,
-                 attn_type='v2', posemb_type='rope2d', downsampler='dwconv5', down_shortcut=1, **kwargs)
+    return PDEImpl(down_factor=2, hidden_size=96, num_heads=4, depth=[2, 5, 8, 5, 2], mlp_ratio=4, **kwargs)
 
 def PDE_B(**kwargs):
-    return PDEImpl(down_factor=2, hidden_size=192, num_heads=8, depth=[2, 5, 8, 5, 2], ffn_type='rep', rep=1, mlp_ratio=4,
-                 attn_type='v2', posemb_type='rope2d', downsampler='dwconv5', down_shortcut=1, **kwargs)
+    return PDEImpl(down_factor=2, hidden_size=192, num_heads=8, depth=[2, 5, 8, 5, 2], mlp_ratio=4, **kwargs)
 
 def PDE_L(**kwargs):
-    return PDEImpl(down_factor=2, hidden_size=384, num_heads=16, depth=[2, 5, 8, 5, 2], ffn_type='rep', rep=1,
-                 mlp_ratio=4, attn_type='v2', posemb_type='rope2d', downsampler='dwconv5', down_shortcut=1, **kwargs)
+    return PDEImpl(down_factor=2, hidden_size=384, num_heads=16, depth=[2, 5, 8, 5, 2], mlp_ratio=4, **kwargs)
 
 PDE_models = {
     'PDE-S': PDE_S,

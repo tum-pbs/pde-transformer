@@ -16,11 +16,8 @@ python simulation.py --dimension 2 --pde gs_epsilon --out_name gs_epsilon --num_
 python simulation.py --dimension 2 --pde gs_theta --out_name gs_theta --num_sims 10 --gpu_id 2
 python simulation.py --dimension 2 --pde gs_iota --out_name gs_iota --num_sims 10 --gpu_id 2
 python simulation.py --dimension 2 --pde gs_kappa --out_name gs_kappa --num_sims 10 --gpu_id 2
-
 python simulation.py --dimension 2 --pde decay_turb --out_name decay_turb --num_sims 60 --gpu_id 2
 python simulation.py --dimension 2 --pde kolm_flow --out_name kolm_flow --num_sims 60 --gpu_id 2
-
-
 python simulation.py --dimension 2 --pde ks --test_set --out_name ks_test --num_sims 5 --gpu_id 2
 python simulation.py --dimension 2 --pde gs_alpha --test_set --out_name gs_alpha_test --num_sims 3 --gpu_id 2
 python simulation.py --dimension 2 --pde gs_beta --test_set --out_name gs_beta_test --num_sims 3 --gpu_id 2

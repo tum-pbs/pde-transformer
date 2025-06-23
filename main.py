@@ -75,12 +75,6 @@ def get_parser(**parser_kwargs):
     )
 
     parser.add_argument(
-        "--no-test",
-        action='store_true',
-        help="no test after training",
-    )
-
-    parser.add_argument(
         "--no-train",
         action='store_true',
         help="no training",
@@ -95,7 +89,7 @@ def get_parser(**parser_kwargs):
     parser.add_argument(
         "--no-inference",
         action='store_true',
-        help="no inference",
+        help="no inference after training",
     )
 
     return parser

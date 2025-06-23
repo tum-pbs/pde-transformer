@@ -1,10 +1,7 @@
 paths:
   PBDL_index:
-    2D_ACDM: /mnt/data/pbdl-datasets-local/2d_acdm
-    2D_APE: /mnt/data/pbdl-datasets-local/2d_apebench_scraped
-    2D_APE_xxl: /mnt/data/pbdl-datasets-local/2d_apebench_256_large
-    2D_JHTDB: /mnt/data/pbdl-datasets-local/2d_jhtdb_downloaded
-    2D_WELL: /mnt/data/pbdl-datasets-local/2d_well_downloaded
+    2D_APE_xxl: ./datasets/
+    2D_WELL: ./datasets/
 machine:
   devices: 1
   accelerator: gpu
