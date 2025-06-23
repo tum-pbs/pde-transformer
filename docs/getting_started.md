@@ -12,7 +12,7 @@ This guide will help you get started with PDE-Transformer, from installation to 
 You can install PDE-Transformer using pip:
 
 ```bash
-# Install from Test PyPI
+# Install from PyPI
 pip install pdetransformer
 
 # Or install from source
