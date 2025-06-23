@@ -1,6 +1,6 @@
 """PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations"""
 
-__version__ = "0.1.0"
+__version__ = "0.1.7"
 
 from . import utils
 from . import visualization
