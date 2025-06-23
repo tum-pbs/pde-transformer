@@ -45,7 +45,7 @@
 
 ```bash
 # Install from Test PyPI
-pip install --extra-index-url https://test.pypi.org/simple/ pdetransformer
+pip install pdetransformer
 
 # Or install from source
 git clone https://github.com/pde-transformer/pde-transformer.git
