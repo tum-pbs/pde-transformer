@@ -15,6 +15,7 @@ from .callback import get_callbacks
 from .utils import instantiate_from_config, parse_config, generate_id
 
 import logging
+
 log = logging.getLogger(__name__)
 
 from lightning.fabric.utilities.rank_zero import rank_prefixed_message, _get_rank, rank_zero_info, rank_zero_warn
@@ -24,12 +25,14 @@ DEFAULT_LOG_DIR = './logs'
 DEFAULT_ENVIRONMENT = './env/local.yaml'
 DEFAULT_CFG_NAME = 'project_config.yaml'
 
+
 def restore_config(config_dir):
     config_file = config_dir.joinpath(DEFAULT_CFG_NAME)
     if config_file.exists():
         return OmegaConf.load(config_file)
     else:
         raise FileNotFoundError(f'Config file not found at {config_file}')
+
 
 def save_config(config, config_dir):
     config_dir.mkdir(exist_ok=True)
@@ -38,7 +41,6 @@ def save_config(config, config_dir):
 
 
 def get_config(opt, unknown):
-
     try:
         configs = [parse_config(OmegaConf.load(cfg)) for cfg in opt.config]
         cli = OmegaConf.from_dotlist(unknown)
@@ -105,7 +107,7 @@ def get_config(opt, unknown):
     if config.debug:
         os.environ["TORCH_CPP_LOG_LEVEL"] = "INFO"
         os.environ["TORCH_DISTRIBUTED_DEBUG"] = "DETAIL"
-        
+
     checkpoint_dir = logdir.joinpath('checkpoint')
     checkpoint_dir.mkdir(exist_ok=True)
 
@@ -162,7 +164,6 @@ def get_config(opt, unknown):
 
 
 def load_environment(env):
-
     if env is None:
         rank_zero_info(f'Loading default environment at {DEFAULT_ENVIRONMENT}')
         env_config = OmegaConf.load(DEFAULT_ENVIRONMENT)
@@ -184,9 +185,7 @@ def set_default_options(config: DictConfig):
     seed_everything(config['runtime']['seed'])
 
 
-
 def get_loggers(config: DictConfig):
-
     log.info(rank_prefixed_message(f"Runtime config: {config.runtime}", _get_rank()))
 
     wandb_logger = WandbLogger(
@@ -255,7 +254,6 @@ def set_initial_learning_rate(trainer, cpu, batch_size, base_learning_rate, trai
 
 
 def handle_exception(trainer, e, debug):
-
     if debug and trainer is not None and trainer.global_rank == 0:
         try:
             import pudb as debugger
@@ -268,7 +266,6 @@ def handle_exception(trainer, e, debug):
 
 
 def cleanup(trainer, debug, resume, logdir):
-
     if trainer is not None and trainer.global_rank == 0:
 
         # move newly created debug project to debug_runs
@@ -283,7 +280,6 @@ def cleanup(trainer, debug, resume, logdir):
 
 
 def main_setup(config):
-
     set_default_options(config)
 
     loggers = get_loggers(config)
@@ -342,14 +338,11 @@ def main_setup(config):
 
 def main_train(data: lightning.LightningDataModule, model: lightning.LightningModule,
                trainer: lightning.Trainer, config, checkpoint_dir: str):
-
     cpu = config['params'].get("accelerator", "gpu") == "cpu"
 
     learning_rate = set_initial_learning_rate(trainer, cpu, batch_size=config.get("batch_size"),
                                               base_learning_rate=config.get("base_learning_rate"),
                                               trainer_config=config)
-
-
 
     model.learning_rate = learning_rate
     trainer.fit(model, data, ckpt_path="last")
@@ -357,7 +350,6 @@ def main_train(data: lightning.LightningDataModule, model: lightning.LightningMo
 
 def main_inference(data: lightning.LightningDataModule, model: lightning.LightningModule,
                    trainer: lightning.Trainer, config):
-
     ema_file = config['runtime']['logdir'] + '/checkpoint-ema/last.ckpt'
     # check if ema_file exists
     if os.path.exists(ema_file) and config['ema']:

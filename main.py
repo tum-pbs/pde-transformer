@@ -7,6 +7,7 @@ from pathlib import Path
 import warnings
 
 from pl_bolts.utils.stability import UnderReviewWarning
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=UnderReviewWarning)
 
@@ -15,10 +16,11 @@ from omegaconf import OmegaConf
 from pdetransformer.setup import main_setup, save_config, get_config
 
 import logging
+
 log = logging.getLogger(__name__)
 
-def get_parser(**parser_kwargs):
 
+def get_parser(**parser_kwargs):
     parser = argparse.ArgumentParser(**parser_kwargs)
 
     parser.add_argument(
@@ -96,7 +98,6 @@ def get_parser(**parser_kwargs):
 
 
 if __name__ == "__main__":
-
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
 
     # parse config
@@ -107,9 +108,3 @@ if __name__ == "__main__":
 
     save_config(config, Path(config.runtime.config_dir))
     main_setup(config)
-
-
-
-
-
-
