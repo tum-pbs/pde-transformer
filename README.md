@@ -44,7 +44,7 @@
 ### Quick Installation
 
 ```bash
-# Install from Test PyPI
+# Install from PyPI
 pip install pdetransformer
 
 # Or install from source
@@ -81,9 +81,7 @@ PDE-Transformer has been trained and evaluated on 16 different types of PDEs inc
 - **Reaction-Diffusion**: Fisher-KPP, Swift-Hohenberg, Gray-Scott
 - **Fluid Dynamics**: Navier-Stokes (Decaying Turbulence, Kolmogorov Flow)
 
-## Usage
-
-### Quick Start
+## Quick Start
 
 ```python
 from pdetransformer.core.mixed_channels import PDETransformer
@@ -106,7 +104,7 @@ For detailed documentation, visit [tum-pbs.github.io/pde-transformer](https://tu
 If you use PDE-Transformer in your research, please cite:
 
 ```bibtex
-@article{holzschuh2024pde,
+@article{holzschuh2025pde,
   title={PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations},
   author={Holzschuh, Benjamin and Liu, Qiang and Kohl, Georg and Thuerey, Nils},
   booktitle={Forty-second International Conference on Machine Learning, {ICML} 2025, Vancouver, Canada, July 13-19, 2025},
@@ -116,7 +114,7 @@ If you use PDE-Transformer in your research, please cite:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
 
 ---
 
