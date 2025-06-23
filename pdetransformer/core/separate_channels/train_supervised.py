@@ -6,10 +6,10 @@ import torch.nn as nn
 from lightning.pytorch.utilities.types import STEP_OUTPUT
 from tqdm import tqdm
 
-from pdetransformer.core.separate_channels.tasks import TaskMasking, ForwardPrediction
-from pdetransformer.core.separate_channels.utils import from_patch_representation, to_patch_representation
+from .tasks import TaskMasking, ForwardPrediction
+from .utils import from_patch_representation, to_patch_representation
 
-from pdetransformer.utils import instantiate_from_config
+from ...utils import instantiate_from_config
 
 import numpy as np
 

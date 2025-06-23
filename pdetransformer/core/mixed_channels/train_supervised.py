@@ -3,7 +3,7 @@ from typing import List, Union
 
 from torch.nn.functional import mse_loss
 
-from pdetransformer.utils import instantiate_from_config
+from ...utils import instantiate_from_config
 import torch.nn as nn
 import lightning
 import torch

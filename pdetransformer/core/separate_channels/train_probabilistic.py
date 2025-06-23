@@ -9,10 +9,10 @@ from tqdm import tqdm
 
 import lightning
 
-from pdetransformer.core.separate_channels.tasks import TaskMasking, AbstractTask
-from pdetransformer.sampler.scheduler import OdeEulerScheduler
-from pdetransformer.core.separate_channels.utils import to_patch_representation, from_patch_representation, get_weighting_function, sample_time
-from pdetransformer.utils import instantiate_from_config
+from .tasks import TaskMasking, AbstractTask
+from ...sampler.scheduler import OdeEulerScheduler
+from .utils import to_patch_representation, from_patch_representation, get_weighting_function, sample_time
+from ...utils import instantiate_from_config
 
 import numpy as np
 

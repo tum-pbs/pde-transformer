@@ -4,10 +4,9 @@ from typing import List
 from diffusers.utils.torch_utils import randn_tensor
 from tqdm import tqdm
 
-from pdetransformer.sampler.scheduler import OdeEulerScheduler
-from pdetransformer.objectives import TrainingObjective
-
-from pdetransformer.utils import instantiate_from_config
+from ...sampler.scheduler import OdeEulerScheduler
+from ...objectives import TrainingObjective
+from ...utils import instantiate_from_config
 import torch.nn as nn
 import lightning
 import torch
