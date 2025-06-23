@@ -95,6 +95,11 @@ x = torch.randn((1,2,256,256), dtype=torch.float32).cuda()
 predictions = model(x)
 ```
 
+See the following notebook for an example of how to initialize the model from pretrained weights and use it for inference:
+<a href="https://colab.research.google.com/github/tum-pbs/pde-transformer/blob/main/notebooks/visualization_mc_ape2d.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
+</a>
+
 ## Documentation
 
 For detailed documentation, visit [tum-pbs.github.io/pde-transformer](https://tum-pbs.github.io/pde-transformer/).
