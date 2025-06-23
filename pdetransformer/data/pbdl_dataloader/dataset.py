@@ -22,12 +22,19 @@ from .utilities import get_sel_const_sim, get_meta_data, scan_local_dset_dir, ge
 config_path = pkg_resources.resource_filename(__name__, "config.json")
 
 # load configuration
-try:
-    with open(config_path, "r") as f:
-        config = json.load(f)
-except json.JSONDecodeError:
-    raise ValueError("Invalid configuration file.")
+# try:
+#     with open(config_path, "r") as f:
+#         print(f)
+#         config = json.load(f)
+# except json.JSONDecodeError:
+#     raise ValueError("Invalid configuration file.")
 
+config = {
+    "hf_repo_id": "thuerey-group/pde-transformer-ape2d",
+    "local_datasets_dir": "./datasets/",
+    "global_dataset_dir": "./datasets/",
+    "dataset_ext": ".hdf5"
+}
 
 def _load_index():
     global local_index

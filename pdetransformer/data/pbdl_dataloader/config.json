@@ -1,6 +1,0 @@
-{
-    "hf_repo_id": "thuerey-group/pde-transformer-ape2d",
-    "local_datasets_dir": "./datasets/",
-    "global_dataset_dir": "./datasets/",
-    "dataset_ext": ".hdf5"
-  }  
