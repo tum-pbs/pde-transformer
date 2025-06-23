@@ -1,9 +1,11 @@
 site_name: PDE-Transformer
+site_description: Efficient and Versatile Transformers for Physics Simulations
+site_author: Benjamin Holzschuh
 site_url: https://tum-pbs.github.io/pde-transformer
 repo_url: https://github.com/tum-pbs/pde-transformer
 repo_name: tum-pbs/pde-transformer
-site_description: Efficient and Versatile Transformers for Physics Simulations
-site_author: Benjamin Holzschuh
+
+
 use_directory_urls: false
 
 theme:
