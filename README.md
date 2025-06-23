@@ -9,10 +9,10 @@
 <a href="https://tum-pbs.github.io/pde-transformer">
   <img src="https://img.shields.io/badge/docs-latest-green" alt="docs-latest">
 </a>
-<a href="https://github.com/ceyron/apebench/releases">
+<a href="https://github.com/tum-pbs/pde-transformer/releases">
   <img src="https://img.shields.io/github/v/release/tum-pbs/pde-transformer?include_prereleases&label=changelog" alt="Changelog">
 </a>
-<a href="https://github.com/ceyron/apebench/blob/main/LICENSE.txt">
+<a href="https://github.com/tum-pbs/pde-transformer/blob/main/LICENSE.txt">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License">
 </a>
 </p>
