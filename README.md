@@ -48,7 +48,7 @@
 pip install pdetransformer
 
 # Or install from source
-git clone https://github.com/pde-transformer/pde-transformer.git
+git clone https://github.com/tum-pbs/pde-transformer.git
 cd pde-transformer
 pip install -e .
 ```
