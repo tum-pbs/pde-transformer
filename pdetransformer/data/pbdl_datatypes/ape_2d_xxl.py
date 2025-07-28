@@ -105,10 +105,10 @@ def ape_2d_xxl_datasets(dataset_name: str,
             train_sims = list(range(0, 80))
             test_sims = list(range(80, 100))
         elif dataset_name in ["adv", "diff", "adv_diff", "disp", "hyp", "burgers", "kdv", "fisher", "sh"]:
-            # train_sims = list(range(0, 50))
-            # test_sims = list(range(50, 60))
-            train_sims = list(range(0, 500))
-            test_sims = list(range(500, 600))
+            train_sims = list(range(0, 50))
+            test_sims = list(range(50, 60))
+            # train_sims = list(range(0, 500))
+            # test_sims = list(range(500, 600))
         else:
             raise ValueError(f"Unknown dataset: {dataset_name}")
 
