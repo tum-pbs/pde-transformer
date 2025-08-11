@@ -6,16 +6,15 @@ import torch
 
 from ..utils import instantiate_from_config
 
+
 class DiffusionMarkovChain(TrainingObjective):
 
     def __init__(self, diffusion: Dict, loss: Dict):
-
         super().__init__()
         self.diffusion = instantiate_from_config(diffusion)
         self._loss = instantiate_from_config(loss)
 
     def loss(self, model: nn.Module, batch, **kwargs) -> Tuple[torch.Tensor, Dict]:
-
         data = batch.pop("data")
 
         t = self.diffusion.sample_time(data.shape[0]).to(data.device)

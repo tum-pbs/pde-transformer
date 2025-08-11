@@ -5,7 +5,7 @@ from torch import nn
 import torch
 from torch.nn.functional import avg_pool2d
 
-from pdetransformer.utils import instantiate_from_config
+from ...utils import instantiate_from_config
 
 
 class AbstractTask(ABC):

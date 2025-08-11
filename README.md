@@ -9,10 +9,10 @@
 <a href="https://tum-pbs.github.io/pde-transformer">
   <img src="https://img.shields.io/badge/docs-latest-green" alt="docs-latest">
 </a>
-<a href="https://github.com/ceyron/apebench/releases">
+<a href="https://github.com/tum-pbs/pde-transformer/releases">
   <img src="https://img.shields.io/github/v/release/tum-pbs/pde-transformer?include_prereleases&label=changelog" alt="Changelog">
 </a>
-<a href="https://github.com/ceyron/apebench/blob/main/LICENSE.txt">
+<a href="https://github.com/tum-pbs/pde-transformer/blob/main/LICENSE.txt">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License">
 </a>
 </p>
@@ -44,11 +44,11 @@
 ### Quick Installation
 
 ```bash
-# Install from Test PyPI
+# Install from PyPI
 pip install pdetransformer
 
 # Or install from source
-git clone https://github.com/pde-transformer/pde-transformer.git
+git clone https://github.com/tum-pbs/pde-transformer.git
 cd pde-transformer
 pip install -e .
 ```
@@ -81,9 +81,7 @@ PDE-Transformer has been trained and evaluated on 16 different types of PDEs inc
 - **Reaction-Diffusion**: Fisher-KPP, Swift-Hohenberg, Gray-Scott
 - **Fluid Dynamics**: Navier-Stokes (Decaying Turbulence, Kolmogorov Flow)
 
-## Usage
-
-### Quick Start
+## Quick Start
 
 ```python
 from pdetransformer.core.mixed_channels import PDETransformer
@@ -97,6 +95,11 @@ x = torch.randn((1,2,256,256), dtype=torch.float32).cuda()
 predictions = model(x)
 ```
 
+See the following notebook for an example of how to initialize the model from pretrained weights and use it for inference:
+<a href="https://colab.research.google.com/github/tum-pbs/pde-transformer/blob/main/notebooks/visualization_mc_ape2d.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
+</a>
+
 ## Documentation
 
 For detailed documentation, visit [tum-pbs.github.io/pde-transformer](https://tum-pbs.github.io/pde-transformer/).
@@ -106,7 +109,7 @@ For detailed documentation, visit [tum-pbs.github.io/pde-transformer](https://tu
 If you use PDE-Transformer in your research, please cite:
 
 ```bibtex
-@article{holzschuh2024pde,
+@article{holzschuh2025pde,
   title={PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations},
   author={Holzschuh, Benjamin and Liu, Qiang and Kohl, Georg and Thuerey, Nils},
   booktitle={Forty-second International Conference on Machine Learning, {ICML} 2025, Vancouver, Canada, July 13-19, 2025},
@@ -116,7 +119,7 @@ If you use PDE-Transformer in your research, please cite:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
 
 ---
 

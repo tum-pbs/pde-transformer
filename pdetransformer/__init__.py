@@ -1,6 +1,8 @@
 """PDE-Transformer: Efficient and Versatile Transformers for Physics Simulations"""
 
-__version__ = "0.1.0"
+import importlib.metadata
+
+__version__ = importlib.metadata.version("pdetransformer")
 
 from . import utils
 from . import visualization
@@ -20,4 +22,4 @@ __all__ = [
     "objectives",
     "sampler",
     "callback"
-] 
+]

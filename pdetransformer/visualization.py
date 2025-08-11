@@ -10,13 +10,15 @@ from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 
 from vape4d import render
 import seaborn as sns
+
 cmap_nonlinear = sns.color_palette("icefire", as_cmap=True)
 
 
-def triangle_wave(x,p):
-    return 2*np.abs(x/p-np.floor(x/p+0.5))
+def triangle_wave(x, p):
+    return 2 * np.abs(x / p - np.floor(x / p + 0.5))
 
-def zigzag_alpha(cmap,min_alpha=0.2):
+
+def zigzag_alpha(cmap, min_alpha=0.2):
     """changes the alpha channel of a colormap to be linear (0->0, 1->1)
 
     Args:
@@ -28,7 +30,7 @@ def zigzag_alpha(cmap,min_alpha=0.2):
     if isinstance(cmap, ListedColormap):
         colors = copy.deepcopy(cmap.colors)
         for i, a in enumerate(colors):
-            a.append((triangle_wave(i / (cmap.N - 1),0.5)*(1-min_alpha))+min_alpha)
+            a.append((triangle_wave(i / (cmap.N - 1), 0.5) * (1 - min_alpha)) + min_alpha)
         return ListedColormap(colors, cmap.name)
     elif isinstance(cmap, LinearSegmentedColormap):
         segmentdata = copy.deepcopy(cmap._segmentdata)
@@ -39,17 +41,19 @@ def zigzag_alpha(cmap,min_alpha=0.2):
             [0.75, 1.0, 1.0],
             [1.0, 0.0, 0.0]]
         )
-        return LinearSegmentedColormap(cmap.name,segmentdata)
+        return LinearSegmentedColormap(cmap.name, segmentdata)
     else:
         raise TypeError(
             "cmap must be either a ListedColormap or a LinearSegmentedColormap"
         )
+
 
 def symmetric_min_max(arr):
     vmin = arr.min().item()
     vmax = arr.max().item()
     absmax = max(abs(vmin), abs(vmax))
     return -absmax, absmax
+
 
 def render_vape_3d(volume, cmap, height, width, time=0.1, vmin=None, vmax=None):
     if vmin is None:
@@ -71,17 +75,17 @@ def render_vape_3d(volume, cmap, height, width, time=0.1, vmin=None, vmax=None):
     # gamma correction
     return np.power(img / 255.0, 2.4)
 
-def render_trajectory(
-        data:list,
-        dimension:int,
-        sim_id:int,
-        title: str,
-        time_steps:int,
-        steps_plot:int|list[int],
-        vmin:float=None,
-        vmax:float=None,
-    ):
 
+def render_trajectory(
+        data: list,
+        dimension: int,
+        sim_id: int,
+        title: str,
+        time_steps: int,
+        steps_plot: int | list[int],
+        vmin: float = None,
+        vmax: float = None,
+):
     if isinstance(steps_plot, list):
         time_steps = steps_plot
     else:
@@ -106,7 +110,7 @@ def render_trajectory(
     title = f"{title} - Simulation {sim_id}"
     print("Rendering %s..." % title)
 
-    fig = plt.figure(figsize=(1.5*len(time_steps), 1.5*len(modes)), dpi=200)
+    fig = plt.figure(figsize=(1.5 * len(time_steps), 1.5 * len(modes)), dpi=200)
     fig.text(0.5, 0.90, title, fontsize=12, ha="center")
 
     grid = ImageGrid(
@@ -133,7 +137,6 @@ def render_trajectory(
             loaded = data[time_steps[t]]
             vmax = max(vmax, np.max(loaded))
 
-
     for t in range(len(time_steps)):
         loaded = data[time_steps[t]]
         if dimension == 2:
@@ -158,23 +161,23 @@ def render_trajectory(
             elif modes[m] == "x-slice":
                 img = loaded[loaded.shape[0] // 2]
             elif modes[m] == "y-slice":
-                img = loaded[ :, loaded.shape[1] // 2]
+                img = loaded[:, loaded.shape[1] // 2]
             elif modes[m] == "z-slice":
                 img = loaded[:, :, loaded.shape[2] // 2]
             elif "vape" in modes[m]:
 
                 l = loaded.transpose(3, 0, 1, 2)
 
-                img = render_vape_3d(l if modes[m] == "vape" else l[int(modes[m][-1]):int(modes[m][-1])+1],
-                                zigzag_alpha(cmap_nonlinear, 0.1),
-                                height=loaded.shape[0],
-                                width=loaded.shape[1],
-                                time=float(t)/len(time_steps),
-                                vmin=vmin,
-                                vmax=vmax)
+                img = render_vape_3d(l if modes[m] == "vape" else l[int(modes[m][-1]):int(modes[m][-1]) + 1],
+                                     zigzag_alpha(cmap_nonlinear, 0.1),
+                                     height=loaded.shape[0],
+                                     width=loaded.shape[1],
+                                     time=float(t) / len(time_steps),
+                                     vmin=vmin,
+                                     vmax=vmax)
 
             elif "channel" in modes[m]:
-                img = loaded[:,:,int(modes[m][-1])]
+                img = loaded[:, :, int(modes[m][-1])]
             else:
                 raise ValueError("Unknown mode: %s" % modes[m])
 

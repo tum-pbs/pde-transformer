@@ -30,7 +30,6 @@ def get_pipeline(args: DictConfig, module):
     return instantiate_from_config(pipeline).to(module.device)
 
 
-
 def instantiate_from_config(config):
     if not "target" in config:
         if config == '__is_first_stage__':
@@ -46,6 +45,7 @@ def instantiate_from_config(config):
 
 def instantiate_from_config_(target, **params):
     return get_obj_from_str(target)(**params)
+
 
 def parse_config(config):
     """
@@ -69,6 +69,7 @@ def parse_config(config):
             conf_[key] = value
     return conf_
 
+
 import secrets
 import string
 
@@ -81,20 +82,22 @@ def generate_id(length: int = 8) -> str:
     alphabet = string.ascii_lowercase + string.digits
     return "".join(secrets.choice(alphabet) for _ in range(length))
 
+
 def search_checkpoint(logdir):
     pass
 
-def table_info(table:Sequence[Sequence],header:Sequence[str],return_hline=False)->str:
-    table.insert(0,header)
+
+def table_info(table: Sequence[Sequence], header: Sequence[str], return_hline=False) -> str:
+    table.insert(0, header)
     col_widths = [max(len(str(item)) for item in col) for col in zip(*table)]
-    h_line="-".join("-"*width for width in col_widths)
-    str_table=[]
+    h_line = "-".join("-" * width for width in col_widths)
+    str_table = []
     for row in table:
         str_table.append(" | ".join(str(item).ljust(width) for item, width in zip(row, col_widths)))
     str_table.insert(1, h_line)
     str_table.insert(0, h_line)
     str_table.append(h_line)
     if return_hline:
-        return os.linesep.join(str_table),h_line
+        return os.linesep.join(str_table), h_line
     else:
         return os.linesep.join(str_table)

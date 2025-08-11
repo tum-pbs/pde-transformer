@@ -8,6 +8,7 @@ from .training_objective import TrainingObjective
 from .utils import sample_time, get_weighting_function
 from ..utils import instantiate_from_config
 
+
 class COTFlowMatching(TrainingObjective):
     """
     Objective for conditional optimal transport matching the flow.
@@ -15,7 +16,6 @@ class COTFlowMatching(TrainingObjective):
     """
 
     def __init__(self, sigma_min: float = 1e-4, weighting: str = 'constant'):
-
         super().__init__()
 
         self.sigma_min = sigma_min
@@ -24,7 +24,6 @@ class COTFlowMatching(TrainingObjective):
         self.end_time = 1.0
 
     def loss(self, model: nn.Module, batch: dict, **kwargs) -> Tuple[torch.Tensor, Dict]:
-
         data = batch.pop("data")
         t = sample_time(data.device, data.shape[0], t0=self.start_time,
                         t1=self.end_time)
@@ -35,7 +34,7 @@ class COTFlowMatching(TrainingObjective):
         psi_t = torch.einsum("a,abcd->abcd", psi_t, epsilon)
         psi_t = psi_t + torch.einsum("a, abcd->abcd", t, data)
 
-        target = (data - (1-self.sigma_min) * epsilon)
+        target = (data - (1 - self.sigma_min) * epsilon)
 
         flow_prediction = model.forward(psi_t, t, **batch).sample
 
@@ -46,6 +45,7 @@ class COTFlowMatching(TrainingObjective):
         weighted_loss = torch.mean(torch.multiply(weighting, loss))
 
         return weighted_loss, {}
+
 
 class COTFlowMatchingCoupled(TrainingObjective):
     """
@@ -75,13 +75,13 @@ class COTFlowMatchingCoupled(TrainingObjective):
         # pad data and y if channels are less than max_channels
         if num_channels_data < self.max_channels:
             data = torch.cat((data, torch.zeros(data.shape[0],
-                                            self.max_channels - data.shape[1],
-                                            *data.shape[2:], device=data.device)), dim=1)
+                                                self.max_channels - data.shape[1],
+                                                *data.shape[2:], device=data.device)), dim=1)
 
         if y.shape[1] < self.max_channels:
             y = torch.cat((y, torch.zeros(y.shape[0],
-                                        self.max_channels - y.shape[1],
-                                        *y.shape[2:], device=y.device)), dim=1)
+                                          self.max_channels - y.shape[1],
+                                          *y.shape[2:], device=y.device)), dim=1)
 
         # drop conditioning with probability dropout_state
         if torch.rand(1) < self.dropout_state:
@@ -96,7 +96,7 @@ class COTFlowMatchingCoupled(TrainingObjective):
         psi_t = torch.einsum("a,a...->a...", psi_t, epsilon)
         psi_t = psi_t + torch.einsum("a, a...->a...", t, data)
 
-        target = (data - (1-self.sigma_min) * epsilon)
+        target = (data - (1 - self.sigma_min) * epsilon)
 
         input = torch.cat((psi_t, y), dim=1)
         flow_prediction = model.forward(input, t, **batch).sample
