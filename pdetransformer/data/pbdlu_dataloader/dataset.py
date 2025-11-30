@@ -2,15 +2,14 @@ import numpy as np
 import os
 import sys
 import h5py
-from h5py import Group
-import torch
 
 import pdetransformer.data.pbdlu_dataloader.normalization as norm
 
+from h5py import Group
+from typing import Type
 from .logging import info, success, warn, fail, corrupt
 from pdetransformer.data.pbdlu_dataloader import logging
 
-from typing import Type
 
 class Dataset:
     REQUIRED_DSET_ATTRS = {
@@ -64,7 +63,7 @@ class Dataset:
     
     def __init__(
         self,
-        dset_name,
+        dset_path: str,
         sel_sims: list[int] | None = None,  # if None, all simulations are loaded
         sel_const: list[str] | None = None,  # if None, all constants are returned
         sel_in_channels: list[int] | None = None, # if None, all input channels are returned
@@ -88,14 +87,13 @@ class Dataset:
         self.sel_out_channels = sel_out_channels
         self.rng = np.random.default_rng(seed)
         
-        dset_path = f"{dset_name}.hdf5"
         if os.path.exists(dset_path):
-            self._load_dataset(dset_name, dset_path)
+            self._load_dataset(dset_path)
             # Set metadata as attibutes
             for key, value in self.get_meta_data().items():
                 setattr(self, key, value)
         else:
-            fail(f"Dataset '{dset_name}' not found.")
+            fail(f"Dataset '{dset_path}' not found.")
             sys.exit(0)
         
         # time step handling
@@ -174,18 +172,21 @@ class Dataset:
                 "max": self.norm_attrs["norm_const_max"],
             }) if normalize_const else None
     
-    def _load_dataset(self, dset_name, dset_file):
+    def _load_dataset(self, dset_path):
         """Loads the dataset and sets dataset specific attributes on `self`
 
         Args:
-            dset_name (str): The name of the dataset
-            dset_file (str): The path to the dataset file
+            dset_path (str): The path to the dataset file
         """
-        self.dset_name = dset_name
-        self.dset_file = dset_file
+        self.dset_name = dset_path.split(".")[-2].split("/")[-1]
+        self.dset_ext = dset_path.split(".")[-1]
+        if self.dset_ext != "hdf5" and self.dset_ext != "h5":
+            fail(f"Dataset file format '{self.dset_ext}' not supported. Only HDF5 files are supported.")
+            sys.exit(0)
+        self.dset_path = dset_path
         
         # HDF5 file format
-        self.dset = h5py.File(dset_file, "r")
+        self.dset = h5py.File(self.dset_path, "r")
     
     def __len__(self):
         if self.sel_sims is not None:
@@ -213,7 +214,7 @@ class Dataset:
         else:
             sim_idx = idx // self.samples_per_sim
 
-        sim = self.dset["sims/sim" + str(sim_idx)]
+        sim = self.dset["sims/sim" + str(int(sim_idx))]
         sim_x : np.ndarray = sim["x"]
         sim_y : np.ndarray = sim["y"]
         sim_fx : np.ndarray = sim["fx"]
@@ -334,12 +335,12 @@ class Dataset:
         return meta
     
     def get_const_sim(self, sim_idx: int, selected: bool = False):
-        attrs = self.dset["sims/sim" + str(sim_idx)].attrs
+        attrs = self.dset["sims/sim" + str(int(sim_idx))].attrs
         if selected and self.sel_const:
             const = self.sel_const
         else:
             const = self.dset["sims/"].attrs["Constants"]
-        return [attrs[key] for key in const]
+        return np.array([attrs[key] for key in const])
 
     def check_norm_data(self):
         return all(attr in self.dset for attr in Dataset.RESERVED_NORM_ATTRS)
@@ -348,7 +349,7 @@ class Dataset:
         # Clear old norm data
         if self.dset:
             self.dset.close()
-        self.dset = h5py.File(self.dset_file, "r+")
+        self.dset = h5py.File(self.dset_path, "r+")
         
         for attr in self.RESERVED_NORM_ATTRS:
             self.dset.pop(attr, None)
@@ -424,7 +425,7 @@ class Dataset:
         
         if self.dset:
             self.dset.close()
-        self.dset = h5py.File(self.dset_file, "r")
+        self.dset = h5py.File(self.dset_path, "r")
         
     def load_norm_data(self):
         norm_attrs = {}
