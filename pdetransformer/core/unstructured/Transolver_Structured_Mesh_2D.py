@@ -2,8 +2,8 @@ import torch
 import numpy as np
 import torch.nn as nn
 from timm.layers.weight_init import trunc_normal_
-from Embedding import timestep_embedding
-from Physics_Attention import Physics_Attention_Structured_Mesh_2D
+from .Embedding import timestep_embedding
+from .Physics_Attention import Physics_Attention_Structured_Mesh_2D
 
 ACTIVATION = {'gelu': nn.GELU, 'tanh': nn.Tanh, 'sigmoid': nn.Sigmoid, 'relu': nn.ReLU, 'leaky_relu': nn.LeakyReLU(0.1),
               'softplus': nn.Softplus, 'ELU': nn.ELU, 'silu': nn.SiLU}
