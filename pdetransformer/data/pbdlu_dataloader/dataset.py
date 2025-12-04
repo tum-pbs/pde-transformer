@@ -64,28 +64,19 @@ class PBDLUDataset(Dataset):
     def __init__(
         self,
         dset_path: str,
-        # if None, all simulations are loaded
         sel_sims: list[int] | None = None,
-        # if None, all constants are returned
         sel_const: list[str] | None = None,
-        # if None, all input channels are returned
         sel_in_channels: list[int] | None = None,
-        # if None, all target channels are returned
         sel_out_channels: list[int] | None = None,
-        time_steps: int | None = None,  # by default num_frames
-        step_size: int | None = None,  # by default 1
-        trim_start: int | None = None,  # by default 0
-        trim_end: int | None = None,  # by default 0
-        intermediate_time_steps: bool = False,  # by default False
-        # overrides time_steps, step_size, intermediate_time_steps, trim_start, trim_end
+        time_steps: int | None = None,
+        step_size: int | None = None,
+        trim_start: int | None = None,
+        trim_end: int | None = None,
+        intermediate_time_steps: bool = False,
         all_time_steps: bool = False,
-        # by default no normalization
         normalize_pos: Type[norm.NormStrategy] | None = None,
-        # by default no normalization
         normalize_in: Type[norm.NormStrategy] | None = None,
-        # by default no normalization
         normalize_out: Type[norm.NormStrategy] | None = None,
-        # by default no normalization
         normalize_const: Type[norm.NormStrategy] | None = None,
         seed: int = 0,
         **kwargs,

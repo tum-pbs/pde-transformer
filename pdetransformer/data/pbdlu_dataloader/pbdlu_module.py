@@ -47,6 +47,10 @@ class PBDLUDataModule(lightning.LightningDataModule):
         self.train_size = int(split_ratios[0] * total_size)
         self.val_size = int(split_ratios[1] * total_size)
         self.test_size = total_size - self.train_size - self.val_size
+        
+        print("Total dataset size:", total_size)
+        print("Dataset split ratios:", split_ratios)
+        print(f"Dataset sizes -> Train: {self.train_size}, Val: {self.val_size}, Test: {self.test_size}")
 
         # Generate non-overlapping random indices for splitting the dataset
         if shuffle:
