@@ -1663,7 +1663,7 @@ class P3DBlock(nn.Module):
         x_msa = x_msa * (1 + msa_scale[:, None]) + msa_shift[:, None]
 
         x_msa = self.attn(x_msa, attn_mask=attn_mask)
-        x_msa = x_msa * msa_gate[:, None]
+        x_msa = x_msa * (1 + msa_gate[:, None])
 
         x = x + self.drop_path(x_msa)
 
@@ -1671,7 +1671,7 @@ class P3DBlock(nn.Module):
 
         x_mlp = x_mlp * (1 + mlp_scale[:, None]) + mlp_shift[:, None]
         x_mlp = self.mlp(x_mlp)
-        x_mlp = x_mlp * mlp_gate[:, None]
+        x_mlp = x_mlp * (1 + mlp_gate[:, None])
         x = x + self.drop_path(x_mlp)
 
         return x
