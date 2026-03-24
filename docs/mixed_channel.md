@@ -118,4 +118,4 @@ print('Output shape: ', output.sample.shape)
 ### Example Notebook
 
 An example notebook how to run inference for pretrained PDE-Transformer and additional explanations/code examples can be found at 
-[notebooks/visualization_mc_ape2d.ipynb](https://github.com/tum-pbs/pde-transformer/blob/main/pdetransformer/notebooks/visualization_mc_ape2d.ipynb).
+[notebooks/visualization_mc_ape2d.ipynb](https://github.com/tum-pbs/pde-transformer/blob/main/notebooks/visualization_mc_ape2d.ipynb).
