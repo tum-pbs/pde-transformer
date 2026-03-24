@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="https://pypi.org/project/pdetransformer/">
-  <img src="https://img.shields.io/pypi/v/pretransformer.svg" alt="PyPI">
+  <img src="https://img.shields.io/pypi/v/pdetransformer.svg" alt="PyPI">
 </a> 
 <a href="https://tum-pbs.github.io/pde-transformer">
   <img src="https://img.shields.io/badge/docs-latest-green" alt="docs-latest">
