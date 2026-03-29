@@ -397,9 +397,9 @@ class Dataset:
                 info_str += f"   {field}:\n"
 
         info_str += f"\n{logging.BOLD}Constants:{logging.R_BOLD}\n"
-        for i, field in enumerate(self.fields):
+        for i, field in enumerate(self.const):
             if hasattr(self, "const_desc"):
-                info_str += f"   {field}:\t{self.field_desc[i]}\n"
+                info_str += f"   {field}:\t{self.const_desc[i]}\n"
             else:
                 info_str += f"   {field}\n"
         return info_str
