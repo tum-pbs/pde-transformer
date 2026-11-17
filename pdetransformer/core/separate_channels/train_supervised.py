@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 from .tasks import TaskMasking, ForwardPrediction
 from .utils import from_patch_representation, to_patch_representation
+from .pde_transformer import WindowAttention2DTime
 
 from ...utils import instantiate_from_config
 
@@ -260,7 +261,9 @@ class Supervised(lightning.LightningModule):
                  patch_size: int = 4,
                  timesteps: int = 6,
                  optimizer: str = 'adamw',
-                 normalize_channels: bool = False):
+                 normalize_channels: bool = False,
+                 fused_attention: bool = False,
+                 compile: bool = False):
 
         super().__init__()
 
@@ -288,6 +291,14 @@ class Supervised(lightning.LightningModule):
 
         if ckpt_path is not None:
             self.init_from_ckpt(ckpt_path, ignore_keys=ignore_keys)
+
+        for m in self.model.modules():
+            if isinstance(m, WindowAttention2DTime):
+                m.fused = fused_attention
+
+        if compile:
+            torch._dynamo.config.recompile_limit = max(torch._dynamo.config.recompile_limit, 64)
+            self.model.forward = torch.compile(self.model.forward, dynamic=False)
 
     def init_from_ckpt(self, path: str, ignore_keys:list[str]=None):
 

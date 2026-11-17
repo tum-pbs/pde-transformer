@@ -609,7 +609,7 @@ class PosEmbMLPSwinv2D(nn.Module):
         self.pos_emb = None
 
 
-    def forward(self, input_tensor, local_window_size):
+    def bias(self, n, local_window_size):
 
         relative_position_bias_table = self.cpb_mlp(self.relative_coords_table).view(-1, self.num_heads)
         relative_position_bias = relative_position_bias_table[self.relative_position_index.view(-1)].view(
@@ -617,14 +617,16 @@ class PosEmbMLPSwinv2D(nn.Module):
             -1)
         relative_position_bias = relative_position_bias.permute(2, 0, 1).contiguous()
         relative_position_bias = 16 * torch.sigmoid(relative_position_bias)
-        n_global_feature = input_tensor.shape[2] - local_window_size
+        n_global_feature = n - local_window_size
 
-        relative_position_bias = torch.nn.functional.pad(relative_position_bias, (n_global_feature,
-                                                                                  0,
-                                                                                  n_global_feature,
-                                                                                  0)).contiguous()
+        return torch.nn.functional.pad(relative_position_bias, (n_global_feature,
+                                                                0,
+                                                                n_global_feature,
+                                                                0)).contiguous()
 
-        self.pos_emb = relative_position_bias.unsqueeze(0)
+    def forward(self, input_tensor, local_window_size):
+
+        self.pos_emb = self.bias(input_tensor.shape[2], local_window_size).unsqueeze(0)
 
         input_tensor += self.pos_emb
         return input_tensor
@@ -730,6 +732,8 @@ class WindowAttention2DTime(nn.Module):
     FasterViT: Fast Vision Transformers with Hierarchical Attention
     """
 
+    fused = False
+
     def __init__(
         self,
         dim,
@@ -787,6 +791,9 @@ class WindowAttention2DTime(nn.Module):
         )
         q, k, v = qkv[0], qkv[1], qkv[2]
 
+        if self.fused:
+            return self.fused_attention(q, k, v, attn_mask, B, D, N, C)
+
         if self.attn_type == 'v1':
             attn = (q @ k.transpose(-2, -1)) * self.scale
 
@@ -813,6 +820,24 @@ class WindowAttention2DTime(nn.Module):
         x = x.view(B, D, N, C)
 
         return x
+
+    def fused_attention(self, q, k, v, attn_mask, B, D, N, C):
+        scale = self.scale
+        if self.attn_type == 'v2':
+            q = (F.normalize(q, dim=-1) * torch.clamp(self.logit_scale, max=4.6052).exp()).to(q.dtype)
+            k = F.normalize(k, dim=-1)
+            scale = 1.0
+
+        bias = self.pos_emb_funct.bias(N, self.resolution ** 2).unsqueeze(0)
+
+        if attn_mask is not None:
+            mask_shape = attn_mask.shape[0]
+            bias = (bias.unsqueeze(1) + 2 * attn_mask.unsqueeze(1).unsqueeze(0)).expand(
+                (B*D) // mask_shape, -1, -1, -1, -1).reshape(B*D, self.num_heads, N, N)
+
+        x = F.scaled_dot_product_attention(q, k, v, attn_mask=bias.to(q.dtype).contiguous(), scale=scale)
+
+        return x.transpose(1, 2).reshape(B, D, N, C)
 
 def ct_window_simple(ct, W, H, window_size):
     bs = ct.shape[0]
