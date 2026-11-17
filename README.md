@@ -72,6 +72,8 @@ The model supports both supervised and diffusion training:
 - **Supervised Training**: Direct MSE loss for deterministic, unique solutions. Fast training and inference. 
 - **Flow Matching**: For probabilistic modeling and uncertainty quantification.
 
+Optional `Supervised` flags `fused_attention` (fused spatial window attention) and `compile` (`torch.compile`) speed up SC training about 2.7× on an H100; both are off by default and checkpoints stay compatible.
+
 ## Supported PDE Types
 
 PDE-Transformer has been trained and evaluated on 16 different types of PDEs including:
